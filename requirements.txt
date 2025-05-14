@@ -20,3 +20,9 @@ requests==2.32.3
 typing_extensions==4.12.2
 urllib3==2.2.2
 yarl==1.9.4
+
+Django~=5.2.1
+django-modeltranslation~=0.19.14
+asgiref~=3.8.1
+redis~=6.1.0
+asyncio~=3.4.3

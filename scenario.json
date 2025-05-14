@@ -1,0 +1,218 @@
+{
+  "uz": {
+    "welcome": "Xush kelibsiz! Iltimos, tilni tanlang:",
+    "levels": {
+      "bachelor": "Bakalavr",
+      "master": "Magistr",
+      "ordinatura": "Ordinatura"
+    },
+    "faculties": {
+      "general-medicine": "Davolash ishi",
+      "medical-prevention": "Tibbiy profilaktika va jamoat salomatligi",
+      "international": "Xalqaro ta’lim",
+      "pediatrics": "Pediatriya"
+    },
+    "directions": {
+      "biomedical-engineering": "Biotibbiyot muhandisligi",
+      "nursing": "Oliy hamshiralik ishi",
+      "medical-prevention": "Tibbiy profilaktika ishi",
+      "general-medicine": "Davolash ishi",
+      "pharmacy": "Farmatsiya",
+      "pediatrics": "Pediatriya ishi",
+      "dentistry": "Stomatologiya",
+      "fundamental-medicine": "Fundamental tibbiyot"
+    },
+    "menu-message": "Kerakli bo'limni tanlang:",
+    "menu-buttons": [
+      "Dars Jadvali",
+      "Akademik-o’quv faoliyat bo’yicha so’rovlar",
+      "HEMIS-axborot tizimi yuzasidan so’rovlar",
+      "Kasalligi to’g’risidagi ma’lumot",
+      "⚙️ Sozlamalar"
+    ],
+    "settings-buttons": [
+      "Profilni yangilash",
+      "Tilni o'zgartirish",
+      "⬅️ Menyuga qaytish"
+    ],
+    "academic-buttons": [
+      "O‘zbekistondagi xorijiy va nodavlat OTMlardan o‘qishni ko‘chirish haqida ma’lumot",
+      "Xorijdan o‘qishni ko‘chirish haqida ma’lumot",
+      "Magistraturaga o‘qishga hujjat topshirish",
+      "Transkript qog’ozini olish",
+      "GPA balini bilish",
+      "Ijara shartnomasiga ariza berish",
+      "⬅️ Menyuga qaytish"
+    ],
+    "academic-0": "O‘zbekiston Respublikasi Vazirlar Mahkamasining 2017-yil 20-iyundagi Oliy ta’lim muassasalariga o‘qishga qabul qilish, talabalar o‘qishini ko‘chirish, qayta tiklash va o‘qishdan chetlashtirish tartibi to‘g‘risidagi nizomlarni tasdiqlash haqidagi 393-son Qaroriga muvofiq xar yili Arizalar 15-iyuldan 5-avgustgacha (shu kuni ham) qabul qilinadi.\n\nO‘zbekistondagi xorijiy va nodavlat OTMlardan o‘qishni ko‘chirish:\n\n1) mos va turdosh yo‘nalishga test yoki ijodiy imtihon topshiradi hamda o‘tish balini to‘plash talab etiladi. \n2) o‘tish balini to‘play olmasa, super-kontrakt shartlari asosida o‘qishini ko‘chirishga ruxsat beriladi;\n3) mos va turdosh bo‘lmagan yo‘nalish uchun esa bir martalik “super-kontrakt” to‘lab, imtihonsiz ko‘chirishi mumkin. \n              \nDavlat OTMdan nodavlat OTMga o‘qishni ko‘chirish\nBuni davlat nazorat qilmaydi, buning tartibini nodavlat OTMlar o‘zi mustaqil belgilaydi. Nodavlat OTMga o‘qishni ko‘chirish mumkin yoki mumkin emasligini o‘sha OTMning o‘zidan aniqlashtiring. \n\nBir davlat OTM ichida bir yo‘nalish yoki fakultetdan boshqa yo‘nalish yoki fakultetga o‘qishni ko‘chirish\n\nUshbu masala OTM rektori tomonidan ko‘rib chiqiladi, ariza ham rektor nomiga yoziladi (transfer.edu.uz yoki my.uzbmb.uz sayti orqali emas). Bunda ko‘chirilayotgan yo‘nalish mos va turdoshligi, ko‘chirilish sababi, OTM imkoniyatlari va boshqa faktorlar inobatga olinishi mumkin.\n\nBir OTM va hatto bir yo‘nalish doirasida ta’lim shaklini yoki tilni o‘zgartirish\n\nUshbu masala ham OTM ma’muriyati tomonidan hal qilinadi. Bunda ham ko‘chirish maqsadi, OTMning imkoniyati (masalan: auditoriya sig‘imi, professor-o‘qituvchilari soni va hk va boshqa faktorlarga qaralishi mumkin. \n\nArizalar quyidagicha qabul qilinadi:\n\ntransfer.edu.uz — respublikaning bir davlat oliygohidan boshqa davlat oliygohiga yoki bir oliygoh ichida;\n\nmy.uzbmb.uz — xorijiy va nodavlat oliy taʼlim muassasalaridan davlat OTMlariga.\nKerakli hujjatlar:\n◾\uFE0F ariza (onlayn tarzda);\n◾\uFE0F transkript yoki reyting daftarchasi (JPEG yoki Pdf shakli);\n◾\uFE0F akademik maʼlumotnoma (o‘qishni tiklovchilar uchun).",
+    "hemis-buttons": [
+      "Parolni qayta tiklash so’rovi",
+      "Shaxsga doir ma’lumotlarini o’zgartirish to’g’risida",
+      "Universitetda o‘qiyotganligi to‘g‘risidagi ma’lumotnoma olish",
+      "HEMIS dasturidan reyting qaydnomasini olish",
+      "Talabaning darslardan qoldirgan soatlari (davomati)",
+      "Nazorat jadvallari haqida ma’lumot",
+      "Talabalar turar joyiga ariza berish va shartnoma olish",
+      "Bitiruv varog‘ini olish (bitiruvchilar)",
+      "Yangi o‘quv yili uchun to‘lov-shartnomasiga ariza berish va shartnoma olish",
+      "⬅️ Menyuga qaytish"
+    ],
+    "lang-selected": "Til tanlandi: O'zbek",
+    "select-language": "Tilni tanlang",
+    "enter-level": "Darajangizni tanlang:",
+    "enter-faculty": "Fakultetni tanlang:",
+    "enter-direction": "Yo'nalishni tanlang:",
+    "enter-course": "Kursni tanlang (1-4):",
+    "enter-group": "Guruhingizni kiriting:",
+    "enter-firstname": "Ismingizni kiriting:",
+    "enter-lastname": "Familyangizni kiriting:",
+    "enter-middlename": "Otangizning ismini kiriting:",
+    "login-success": "Muvaffaqiyatli ro'yxatdan o'tdingiz!"
+  },
+
+
+
+  "ru": {
+    "welcome": "Добро пожаловать! Пожалуйста, выберите язык:",
+     "levels": {
+      "bachelor": "Бакалавр",
+      "master": "Магистр",
+      "ordinatura": "Ординатура"
+    },
+    "faculties": {
+      "general-medicine": "Лечебное дело",
+      "medical-prevention": "Медицинская профилактика и общественное здоровье",
+      "international": "Международный",
+      "pediatrics": "Педиатрия"
+    },
+    "directions": {
+      "biomedical-engineering": "Биомедицинская инженерия",
+      "nursing": "Сестринское дело",
+      "medical-prevention": "Медицинская профилактика",
+      "general-medicine": "Лечебное дело",
+      "pharmacy": "Фармация",
+      "pediatrics": "Педиатрия",
+      "dentistry": "Стоматология",
+      "fundamental-medicine": "Фундаментальная медицина"
+    },
+    "menu-message": "Выберите нужный раздел:",
+    "menu-buttons": [
+      "Расписание занятий",
+      "Запросы по учебной деятельности",
+      "Запросы по информационной системе HEMIS",
+      "Информация о болезни",
+      "⚙️ Настройки"
+    ],
+    "settings-buttons": [
+      "Обновить профиль",
+      "Изменить язык",
+      "⬅️ Назад в меню"
+    ],
+    "academic-buttons": [
+      "Информация о переводе из зарубежных и частных вузов в Узбекистане",
+      "Информация о переводе из-за рубежа",
+      "Подача документов на магистратуру",
+      "Получение транскрипта",
+      "Узнать балл GPA",
+      "Подача заявления на договор аренды",
+      "⬅️ Назад в меню"
+    ],
+    "academic-0": "Согласно Постановлению Кабинета Министров Республики Узбекистан №393 от 20 июня 2017 года «Об утверждении Положения о порядке приема в высшие учебные заведения, перевода, восстановления и отчисления студентов», заявления принимаются ежегодно с 15 июля по 5 августа (включительно).\n\nПеревод из зарубежных и частных вузов в Узбекистан:\n\n1) необходимо сдать тест или творческий экзамен по соответствующему направлению и набрать проходной балл. \n2) если проходной балл не набран, разрешается перевод на условиях супер-контракта;\n3) для несоответствующих направлений возможен перевод без экзаменов при оплате единовременного «супер-контракта». \n\nПеревод из государственного вуза в частный вуз\nГосударство это не контролирует, порядок устанавливается самим частным вузом. Возможность перевода уточняйте в самом вузе. \n\nПеревод внутри одного государственного вуза с одного направления или факультета на другой\n\nЭтот вопрос рассматривается ректором вуза, заявление также пишется на имя ректора (не через сайты transfer.edu.uz или my.uzbmb.uz). При этом учитываются соответствие направлений, причина перевода, возможности вуза и другие факторы.\n\nИзменение формы или языка обучения в рамках одного направления\n\nЭтот вопрос также решается администрацией вуза. Учитываются цель перевода, возможности вуза (например: вместимость аудиторий, количество преподавателей и другие факторы). \n\nЗаявления принимаются следующим образом:\n\ntransfer.edu.uz — из одного государственного вуза в другой или внутри одного вуза;\n\nmy.uzbmb.uz — из зарубежных и частных вузов в государственные вузы.\nНеобходимые документы:\n◾️ заявление (в онлайн-формате);\n◾️ транскрипт или зачетная книжка (в формате JPEG или Pdf);\n◾️ академическая справка (для восстановления обучения).",
+    "hemis-buttons":[
+      "Запрос на сброс пароля",
+      "Запрос на изменение личных данных",
+      "Запрос на получение справки об обучении в университете",
+      "Получить рейтинг из системы HEMIS",
+      "Пропущенные часы студента (посещаемость)",
+      "Информация о графиках контроля",
+      "Подать заявку и получить договор на общежитие",
+      "Получить выпускной лист (выпускники)",
+      "Подать заявку и получить договор на новый учебный год",
+      "⬅️ Назад в меню"
+    ],
+    "lang-selected": "Язык выбран: Русский",
+    "select-language": "Выберите язык",
+    "enter-level": "Выберите вашу степень:",
+    "enter-faculty": "Выберите факультет:",
+    "enter-direction": "Выберите направление:",
+    "enter-course": "Выберите курс (1-4):",
+    "enter-group": "Введите вашу группу:",
+    "enter-firstname": "Введите ваше имя:",
+    "enter-lastname": "Введите вашу фамилию:",
+    "enter-middlename": "Введите отчество:",
+    "login-success": "Вы успешно зарегистрированы!"
+  },
+
+
+
+  "en": {
+    "welcome": "Welcome! Please select a language:",
+    "levels": {
+      "bachelor": "Bachelor",
+      "master": "Master",
+      "ordinatura": "Ordinatura"
+    },
+    "faculties": {
+      "general-medicine": "General Medicine",
+      "medical-prevention": "Medical Prevention and Public Health",
+      "international": "International",
+      "pediatrics": "Pediatrics"
+    },
+    "directions": {
+      "biomedical-engineering": "Biotibbiyot muhandisligi",
+      "nursing": "Oliy hamshiralik ishi",
+      "medical-prevention": "Tibbiy profilaktika ishi",
+      "general-medicine": "Davolash ishi",
+      "pharmacy": "Farmatsiya",
+      "pediatrics": "Pediatriya ishi",
+      "dentistry": "Stomatologiya",
+      "fundamental-medicine": "Fundamental tibbiyot"
+    },
+    "menu-message": "Select the required section:",
+    "menu-buttons": [
+      "Class Schedule",
+      "Academic Activity Inquiries",
+      "HEMIS Information System Inquiries",
+      "Information About Illness",
+      "⚙️ Settings"
+    ],
+    "settings-buttons": [
+      "Update Profile",
+      "Change Language",
+      "⬅️ Back to Menu"
+    ],
+    "academic-buttons": [
+      "Information about transferring from foreign and private universities in Uzbekistan",
+      "Information about transferring from abroad",
+      "Submitting documents for master's degree",
+      "Obtaining a transcript",
+      "Checking GPA score",
+      "Applying for a rental agreement",
+      "⬅️ Back to Menu"
+    ],
+    "academic-0": "According to the Resolution of the Cabinet of Ministers of the Republic of Uzbekistan No. 393 dated June 20, 2017, \"On the approval of the regulations on the procedure for admission to higher educational institutions, transfer, reinstatement, and expulsion of students,\" applications are accepted annually from July 15 to August 5 (inclusive).\n\nTransferring from foreign and private universities in Uzbekistan:\n\n1) You must take a test or creative exam in a relevant field and achieve the passing score. \n2) If the passing score is not achieved, transfer is allowed under the terms of a super-contract;\n3) For non-relevant fields, transfer without exams is possible by paying a one-time \"super-contract\" fee. \n\nTransferring from a state university to a private university\nThis is not controlled by the state; the procedure is determined independently by private universities. Check with the university itself whether transfer is possible. \n\nTransferring within one state university from one field or faculty to another\n\nThis issue is considered by the rector of the university, and the application is also addressed to the rector (not through the websites transfer.edu.uz or my.uzbmb.uz). Factors such as the relevance of the fields, the reason for the transfer, the university's capabilities, and other factors are taken into account.\n\nChanging the form or language of education within one field\n\nThis issue is also resolved by the university administration. Factors such as the purpose of the transfer, the university's capabilities (e.g., classroom capacity, number of professors, etc.), and other factors are considered. \n\nApplications are accepted as follows:\n\ntransfer.edu.uz — from one state university to another or within one university;\n\nmy.uzbmb.uz — from foreign and private universities to state universities.\nRequired documents:\n◾️ Application (online);\n◾️ Transcript or grade book (in JPEG or Pdf format);\n◾️ Academic certificate (for reinstatement).",
+    "hemis-buttons": [
+      "Request to reset password",
+      "Request to change personal information",
+      "Request for a certificate of enrollment at the university",
+      "Obtain a rating record from the HEMIS system",
+      "Student's missed hours (attendance)",
+      "Information about control schedules",
+      "Apply for and obtain a dormitory contract",
+      "Obtain a graduation sheet (graduates)",
+      "Apply for and obtain a contract for the new academic year",
+      "⬅️ Back to Menu"
+    ],
+    "lang-selected": "Language selected: English",
+    "select-language": "Select a language",
+    "enter-level": "Select your level:",
+    "enter-faculty": "Select your faculty:",
+    "enter-direction": "Select your direction:",
+    "enter-course": "Select your course (1-4):",
+    "enter-group": "Enter your group:",
+    "enter-firstname": "Enter your firstname:",
+    "enter-lastname": "Enter your lastname:",
+    "enter-middlename": "Enter your middle name:",
+    "login-success": "You have successfully registered!"
+  }
+}
