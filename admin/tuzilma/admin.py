@@ -1,0 +1,31 @@
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+
+from .models import Direction, Group, ScheduleUpload, ScheduleGet
+
+
+@admin.register(Direction)
+class DirectionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'is_active')
+    list_display_links = ('id', 'name')
+    list_filter = ('is_active',)
+
+@admin.register(Group)
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ('name', 'direction', 'course', 'is_active')
+    list_filter = ('direction', 'course', 'is_active')
+
+@admin.register(ScheduleUpload)
+class ScheduleUploadAdmin(admin.ModelAdmin):
+    list_display = ('direction', 'course', 'created_at')
+    list_filter = ('direction', 'course', 'created_at')
+
+@admin.register(ScheduleGet)
+class ScheduleGetAdmin(admin.ModelAdmin):
+    list_display = ('direction', 'course')
+    list_filter = ('direction', 'course')
+
+    def has_add_permission(self, request):
+        if self.model.objects.count() > 0:
+            return False
+        return super().has_add_permission(request)

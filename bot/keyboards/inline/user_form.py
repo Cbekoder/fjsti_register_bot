@@ -62,14 +62,60 @@ def course_buttons() -> InlineKeyboardMarkup:
     return buttons
 
 
-def group_buttons() -> InlineKeyboardMarkup:
+def group_buttons(groups : list) -> InlineKeyboardMarkup:
+    inline_keyboard = []
+    for i in range(0, len(groups), 2):
+        row = [
+            InlineKeyboardButton(text=group, callback_data=f"group_{group}")
+            for group in groups[i:i + 2]
+        ]
+        inline_keyboard.append(row)
+    buttons = InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
+    return buttons
+
+
+def profile_buttons(lang='uz') -> InlineKeyboardMarkup:
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text=f"{number}",
-                    callback_data=f"group_{number}"
-                ) for number in range(1, 5)
+                    text=get_text(lang, 'edit-lastname'),
+                    callback_data='edit_lastname'
+                ),
+                InlineKeyboardButton(
+                    text=get_text(lang, 'edit-firstname'),
+                    callback_data='edit_firstname'
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=get_text(lang, 'edit-middlename'),
+                    callback_data='edit_middlename'
+                ),
+                InlineKeyboardButton(
+                    text=get_text(lang, 'edit-level'),
+                    callback_data='edit_level'
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=get_text(lang, 'edit-faculty'),
+                    callback_data='edit_faculty'
+                ),
+                InlineKeyboardButton(
+                    text=get_text(lang, 'edit-direction'),
+                    callback_data='edit_direction'
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text=get_text(lang, 'edit-course'),
+                    callback_data='edit_course'
+                ),
+                InlineKeyboardButton(
+                    text=get_text(lang, 'edit-group'),
+                    callback_data='edit_group'
+                )
             ]
         ]
     )

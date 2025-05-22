@@ -26,3 +26,5 @@ django-modeltranslation~=0.19.14
 asgiref~=3.8.1
 redis~=6.1.0
 asyncio~=3.4.3
+pandas~=2.2.3
+openpyxl~=3.1.5

@@ -2,6 +2,7 @@ from aiogram import F
 from aiogram.types import Message
 from keyboards.default.menu_keyboard import menu_buttons
 from keyboards.inline.common_buttons import language_buttons
+from keyboards.inline.user_form import profile_buttons
 
 from main.models import Student
 
@@ -14,15 +15,17 @@ async def handle_settings_0(message: Message):
     user_id = message.from_user.id
     lang = await redis_cl.get(f"user:{user_id}:language")
     student = await orm_async(Student.objects.get, telegram_id=user_id)
-    response = f"Familya: {student.last_name}\n" \
-                f"Ism: {student.first_name}\n" \
-                f"Otasining ismi: {student.middle_name}\n" \
-                f"Daraja: {get_text(lang, 'levels')[student.level]}\n" \
-                f"Fakultet: {get_text(lang, 'faculties')[student.faculty]}\n" \
-                f"Yo'nalish: {get_text(lang, "directions")[student.direction]}\n" \
-                f"Kurs: {student.course}\n" \
-                f"Guruh: {student.group}\n"
-    await message.answer(response)
+    response = f"{get_text(lang, 'edit-lastname')}: {student.last_name}\n" \
+                f"{get_text(lang, 'edit-firstname')}: {student.first_name}\n" \
+                f"{get_text(lang, 'edit-middlename')}: {student.middle_name}\n" \
+                f"{get_text(lang, 'edit-level')}: {get_text(lang, 'levels')[student.level_key]}\n" \
+                f"{get_text(lang, 'edit-faculty')}: {get_text(lang, 'faculties')[student.faculty_key]}\n" \
+                f"{get_text(lang, 'edit-direction')}: {get_text(lang, "directions")[student.direction_key]}\n" \
+                f"{get_text(lang, 'edit-course')}: {student.course}\n" \
+                f"{get_text(lang, 'edit-group')}: {student.group}\n\n" \
+                f"{get_text(lang, 'ask-edit')}"
+    await message.delete()
+    await message.answer(response, reply_markup=profile_buttons(lang))
 
 
 @dp.message(F.text.in_(get_handler_keys("settings-buttons", 1)))

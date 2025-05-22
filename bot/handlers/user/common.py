@@ -23,11 +23,12 @@ async def language_handler(callback_query: CallbackQuery, state: FSMContext) -> 
 
     await redis_cl.set(f"user:{user_id}:language", language)
 
+    await orm_async(student.save)
+
     if student.is_registered:
         await callback_query.message.answer(get_text(language, "lang-selected"), reply_markup=settings_buttons(language))
         await callback_query.message.delete()
     else:
-        await orm_async(student.save)
         buttons = level_buttons(language)
-        await callback_query.message.edit_text(get_text(language, "enter_level"), reply_markup=buttons)
+        await callback_query.message.edit_text(get_text(language, "enter-level"), reply_markup=buttons)
         await state.set_state(UserForm.level)

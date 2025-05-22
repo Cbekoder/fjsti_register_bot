@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}FJSTI | So'rov ma'lumotlari{% endblock %}
+{% block page_title %}So'rov ma'lumotlari{% endblock %}
+
+
+{% block content %}
+<div class="card">
+    <div class="card-body p-4">
+        <h5 class="mb-4">Talaba ma'lumotlari</h5>
+        <div class="row mb-3">
+            <label for="input40" class="col-sm-3 col-form-label">F.I.SH</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">person_outline</i></span>
+                    <input type="text" class="form-control" id="input40" value="{{ request.student.full_name }}"
+                           placeholder="F.I.SH" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="input43" class="col-sm-3 col-form-label">Fakultet</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">apps</i></span>
+                    <input type="text" class="form-control" id="input43" value="{{ request.student.faculty }}"
+                           placeholder="Fakultet" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="input44" class="col-sm-3 col-form-label">Yo'nalish</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">school</i></span>
+                    <input type="text" class="form-control" id="input44" value="{{ request.student.direction }}"
+                           placeholder="Yo'nalish" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="input45" class="col-sm-3 col-form-label">Kurs</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">class</i></span>
+                    <input type="text" class="form-control" id="input45" value="{{ request.student.course }}"
+                           placeholder="Kurs" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="input46" class="col-sm-3 col-form-label">Guruh</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">group</i></span>
+                    <input type="text" class="form-control" id="input46" value="{{ request.student.group }}"
+                           placeholder="Guruh" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="input46" class="col-sm-3 col-form-label">Telefon raqami</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">phone</i></span>
+                    <input type="text" class="form-control" id="input47" value="{{ request.student.phone }}"
+                           placeholder="Telefon raqami" disabled>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="card">
+    <div class="card-body p-4">
+        <h5 class="mb-4">So'rov ma'lumotlari</h5>
+        <div class="row mb-3">
+            <label for="input48" class="col-sm-3 col-form-label">So'rov</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">list</i></span>
+                    <input type="text" class="form-control" id="input48" value="{{ request.to_service }}"
+                           placeholder="So'rovni kiriting" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="file49" class="col-sm-3 col-form-label">Fayl</label>
+            <div class="col-sm-9">
+                {% if request.file %}
+                <a href="{{ request.file.url }}" class="btn btn-link" target="_blank">Yuklangan faylni ko'rish</a>
+                {% else %}
+                <div class="input-group">
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">folder</i></span>
+                    <input type="text" class="form-control" id="file49" placeholder="Fayl mavjud emas!" disabled>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="input60" class="col-sm-3 col-form-label">So'rov izohi</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">comment</i></span>
+                    <textarea class="form-control" id="input60" rows="3" placeholder="So'rov izohi" disabled>{{request.description}}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        <div class="card-body p-4">
+            <h5 class="mb-4">Javob yo'llash</h5>
+            <div class="row mb-3">
+                <label for="input50" class="col-sm-3 col-form-label">Javob izohi</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="material-icons-outlined fs-5">comment</i></span>
+                        <textarea class="form-control" id="input50" rows="3" name="response"
+                                  placeholder="Javob izohini kiriting..." {% if uneditable %} disabled {% endif %}>{% if request.response %}{{ request.response }}{% endif %}</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="input51" class="col-sm-3 col-form-label">Javob fayl</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="material-icons-outlined fs-5">upload_file</i></span>
+                        {% if request.response_file %}
+                        <a href="{{ request.response_file.url }}" class="btn btn-link" target="_blank">Yuklangan faylni
+                            ko'rish</a>
+                        {% else %}
+                        <input type="file" class="form-control" id="input51" name="response_file" {% if uneditable %}
+                               disabled {% endif %}>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">Holati</label>
+                <div class="col-sm-9">
+                    <div class="form-check">
+                        {% if uneditable %}
+                        <input id="statusCheckbox" class="form-check-input" type="checkbox" name="status"
+                               style="width: 2rem; height: 2rem;" disabled {% if request.status == "completed" %} checked {% endif %}>
+                        {% else %}
+                        <input id="statusCheckbox" class="form-check-input" type="checkbox" name="status"
+                               style="width: 2rem; height: 2rem;" checked>
+                        {% endif %}
+                        <span id="statusBadge" class="badge bg-grd-warning"
+                              style="margin-left: 1rem; font-size: 1.1rem;">Rad etildi</span>
+                    </div>
+                </div>
+            </div>
+            <script>
+                const checkbox = document.getElementById('statusCheckbox');
+                const badge = document.getElementById('statusBadge');
+
+                const savedState = localStorage.getItem('checkboxState');
+                if (savedState === 'true') {
+                    checkbox.checked = true;
+                    badge.textContent = 'Bajarildi';
+                    badge.classList.remove('bg-grd-warning');
+                    badge.classList.add('bg-grd-success');
+                } else {
+                    checkbox.checked = false;
+                    badge.textContent = 'Rad etildi';
+                    badge.classList.remove('bg-grd-success');
+                    badge.classList.add('bg-grd-warning');
+                }
+
+                checkbox.addEventListener('change', function () {
+                    if (this.checked) {
+                        badge.textContent = 'Bajarildi';
+                        badge.classList.remove('bg-grd-warning');
+                        badge.classList.add('bg-grd-success');
+                        localStorage.setItem('checkboxState', 'true');
+                    } else {
+                        badge.textContent = 'Rad etildi';
+                        badge.classList.remove('bg-grd-success');
+                        badge.classList.add('bg-grd-warning');
+                        localStorage.setItem('checkboxState', 'false');
+                    }
+                });
+            </script>
+            <div class="row">
+                <label class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <div class="d-md-flex d-grid align-items-center gap-3">
+                        <button type="{% if uneditable %}button{%else%}submit{% endif %}" class="btn btn-outline-success px-5">Saqlash</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

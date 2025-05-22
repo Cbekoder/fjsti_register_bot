@@ -1,74 +1,26 @@
 from django.contrib import admin
-from django.contrib.admin import ModelAdmin
+from django.contrib.auth.admin import UserAdmin
+from .models import User, Student, StudentRequest
 
-from .models import Level, Faculty, Direction, Group, Student
-from modeltranslation.admin import TranslationAdmin
-
-@admin.register(Level)
-class LevelAdmin(TranslationAdmin):
-    list_display = ('id', 'name')
-    search_fields = ('name',)
-
-    class Media:
-        js = (
-            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-            'modeltranslation/js/tabbed_translation_fields.js',
-        )
-        css = {
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
-
-@admin.register(Faculty)
-class FacultyAdmin(TranslationAdmin):
-    list_display = ('id', 'name')
-    search_fields = ('name',)
-
-    class Media:
-        js = (
-            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-            'modeltranslation/js/tabbed_translation_fields.js',
-        )
-        css = {
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
-
-@admin.register(Direction)
-class DirectionAdmin(TranslationAdmin):
-    list_display = ('id', 'name', 'faculty')
-    search_fields = ('name',)
-    list_filter = ('faculty',)
-
-    class Media:
-        js = (
-            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-            'modeltranslation/js/tabbed_translation_fields.js',
-        )
-        css = {
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
-
-@admin.register(Group)
-class GroupAdmin(TranslationAdmin):
-    list_display = ('id', 'name', 'direction')
-    search_fields = ('name',)
-    list_filter = ('direction',)
-
-    class Media:
-        js = (
-            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-            'modeltranslation/js/tabbed_translation_fields.js',
-        )
-        css = {
-            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
-        }
+@admin.register(User)
+class CustomUserAdmin(UserAdmin):
+    list_display = ('username', 'email', 'office', 'is_staff')
+    list_filter = ('office', 'is_staff', 'is_superuser')
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Personal info', {'fields': ('email', 'office')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+    )
 
 @admin.register(Student)
-class StudentAdmin(ModelAdmin):
-    list_display = ('id', 'telegram_id', 'full_name', 'level', 'faculty', 'direction', 'course', 'group')
-    list_display_links = ('id', 'telegram_id', 'full_name')
-    search_fields = ('full_name',)
-    list_filter = ('level', 'faculty', 'direction', 'course', 'group')
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'telegram_id', 'group', 'course', 'is_registered')
+    list_filter = ('is_registered', 'course', 'language')
+    search_fields = ('first_name', 'last_name', 'telegram_id')
+
+@admin.register(StudentRequest)
+class StudentRequestAdmin(admin.ModelAdmin):
+    list_display = ('student', 'to_service', 'status', 'office', 'created_at')
+    list_filter = ('status', 'office', 'created_at')
+    search_fields = ('student__first_name', 'student__last_name', 'to_service')
