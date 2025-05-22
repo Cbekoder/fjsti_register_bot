@@ -16,7 +16,7 @@ def generate_schedule_template(request):
 
     groups = Group.objects.filter(course=schedule_data.course, direction=schedule_data.direction).values_list('name', flat=True)
 
-    file_name = f"{schedule_data.direction.name}_{schedule_data.course}_{datetime.now().strftime("%d.%m.%y")}.xlsx"
+    file_name = f"{schedule_data.direction.name}_{schedule_data.course}_{datetime.now().strftime('%d.%m.%y')}.xlsx"
 
     wb = openpyxl.Workbook()
     ws = wb.active
