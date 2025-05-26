@@ -58,7 +58,7 @@
     "hemis-buttons": [
       "Parolni qayta tiklash so’rovi 🔑",
       "Shaxsga doir ma’lumotlarini o’zgartirish to’g’risida 👤",
-      "Universitetda o‘qiyotganligi to‘g‘risidagi ma’lumotnoma olish 🎓",
+      "Institutda o‘qiyotganligi to‘g‘risidagi ma’lumotnoma olish 🎓",
       "HEMIS dasturidan reyting qaydnomasini olish 📜",
       "Talabaning darslardan qoldirgan soatlari (davomati) ⏰",
       "Talabalar turar joyiga ariza berish va shartnoma olish 🏠",
@@ -176,7 +176,7 @@
     "hemis-buttons": [
       "Запрос на восстановление пароля 🔑",
       "Изменение персональных данных \uD83D\uDC64",
-      "Получение справки о обучении в университете \uD83C\uDF93",
+      "Получение справки о обучении в институт \uD83C\uDF93",
       "Получение рейтинговой книжки из программы HEMIS 📜",
       "Часы, пропущенные студентом на занятиях (посещаемость) ⏰",
       "Подача заявления на студенческое общежитие и получение договора 🏠",
@@ -294,7 +294,7 @@
     "hemis-buttons": [
       "Password Reset Request 🔑",
       "Request to Change Personal Information \uD83D\uDC64",
-      "Obtaining a Certificate of University Enrollment \uD83C\uDF93",
+      "Obtaining a Certificate of Institute Enrollment \uD83C\uDF93",
       "Obtaining a Rating Book from the HEMIS Program 📜",
       "Student’s Missed Class Hours (Attendance) ⏰",
       "Application for Student Housing and Contract Obtaining 🏠",
