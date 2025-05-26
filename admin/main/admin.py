@@ -4,7 +4,7 @@ from .models import User, Student, StudentRequest
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'office', 'is_staff')
+    list_display = ('username', 'office', 'is_staff')
     list_filter = ('office', 'is_staff', 'is_superuser')
     fieldsets = (
         (None, {'fields': ('username', 'password')}),

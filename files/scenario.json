@@ -7,9 +7,9 @@
       "ordinatura": "Ordinatura 🩺"
     },
     "faculties": {
-      "general-medicine": "Davolash ishi 🩺",
+      "general-medicine": "Davolash 🩺",
       "medical-prevention": "Tibbiy profilaktika va jamoat salomatligi 🛡️",
-      "international": "Xalqaro ta’lim 🌍",
+      "international": "Xalqaro 🌍",
       "pediatrics": "Pediatriya 👶"
     },
     "directions": {
@@ -20,7 +20,8 @@
       "pharmacy": "Farmatsiya 💊",
       "pediatrics": "Pediatriya ishi 👶",
       "dentistry": "Stomatologiya 🦷",
-      "fundamental-medicine": "Fundamental tibbiyot 🔬"
+      "fundamental-medicine": "Fundamental tibbiyot 🔬",
+      "folk_medicine": "Xalq tabobati 🏥"
     },
     "menu-message": "Kerakli bo'limni tanlang: 📋",
     "menu-buttons": [
@@ -137,7 +138,8 @@
       "pharmacy": "Фармация 💊",
       "pediatrics": "Педиатрия 👶",
       "dentistry": "Стоматология 🦷",
-      "fundamental-medicine": "Фундаментальная медицина 🔬"
+      "fundamental-medicine": "Фундаментальная медицина 🔬",
+      "folk_medicine": "Народная медицина 🏥"
     },
     "menu-message": "Выберите нужный раздел: 📋",
     "menu-buttons": [
@@ -254,7 +256,8 @@
       "pharmacy": "Pharmacy 💊",
       "pediatrics": "Pediatrics 👶",
       "dentistry": "Dentistry 🦷",
-      "fundamental-medicine": "Fundamental Medicine 🔬"
+      "fundamental-medicine": "Fundamental Medicine 🔬",
+      "folk_medicine": "Folk medicine 🏥"
     },
     "menu-message": "Select the desired section: 📋",
     "menu-buttons": [
