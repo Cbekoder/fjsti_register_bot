@@ -96,7 +96,7 @@ async def get_schedule(user_id, weekday_number):
                 jadval = jadval.drop(columns=["Day"])
                 jadval_dict = jadval.to_dict(orient="records")
                 result = (f"👥 {group}\n"
-                          f"📆 {datetime.today().strftime('%d.%m.%Y')} | {get_text(lang, "weekdays")[weekday_number]}\n\n"
+                          f"📆 {datetime.today().strftime('%d.%m.%Y')} | {get_text(lang, 'weekdays')[weekday_number]}\n\n"
                           f"{format_schedule(schedule_data=jadval_dict)}")
 
                 return result
