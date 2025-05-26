@@ -20,7 +20,7 @@ async def handle_settings_0(message: Message):
                 f"{get_text(lang, 'edit-middlename')}: {student.middle_name}\n" \
                 f"{get_text(lang, 'edit-level')}: {get_text(lang, 'levels')[student.level_key]}\n" \
                 f"{get_text(lang, 'edit-faculty')}: {get_text(lang, 'faculties')[student.faculty_key]}\n" \
-                f"{get_text(lang, 'edit-direction')}: {get_text(lang, "directions")[student.direction_key]}\n" \
+                f"{get_text(lang, 'edit-direction')}: {get_text(lang, 'directions')[student.direction_key]}\n" \
                 f"{get_text(lang, 'edit-course')}: {student.course}\n" \
                 f"{get_text(lang, 'edit-group')}: {student.group}\n\n" \
                 f"{get_text(lang, 'ask-edit')}"
