@@ -37,6 +37,8 @@ def logout_view(request):
 
 class HomeView(View):
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
         total_requests = StudentRequest.objects.count()
         new_requests = StudentRequest.objects.filter(Q(status="new") | Q(status="in_progress")).count()
         completed_requests = StudentRequest.objects.filter(status='completed').count()
@@ -94,6 +96,9 @@ class HomeView(View):
 
 class AllListView(View):
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
         if request.user.is_staff:
             requests_list = StudentRequest.objects.all()
         else:
@@ -114,6 +119,9 @@ class AllListView(View):
 
 class NewListView(View):
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
         if request.user.is_staff:
             requests_list = StudentRequest.objects.filter()
         else:
@@ -134,6 +142,9 @@ class NewListView(View):
 
 class DoneListView(View):
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
         if request.user.is_staff:
             requests_list = StudentRequest.objects.filter(status="completed")
         else:
@@ -154,6 +165,9 @@ class DoneListView(View):
 
 class RejectedListView(View):
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
         if request.user.is_staff:
             requests_list = StudentRequest.objects.filter(status='rejected')
         else:
@@ -174,6 +188,9 @@ class RejectedListView(View):
 
 class StudentRequestDetailView(View):
     def get(self, request, pk):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
         student_request = get_object_or_404(StudentRequest, pk=pk)
         if student_request.status == "new":
             student_request.status = "in_progress"
@@ -185,6 +202,9 @@ class StudentRequestDetailView(View):
         return render(request, "response_form.html", context)
 
     def post(self, request, pk):
+        if not request.user.is_authenticated:
+            return redirect('login')
+
         student_request = get_object_or_404(StudentRequest, pk=pk)
 
         if student_request.status in ("completed", "rejected"):
