@@ -295,7 +295,7 @@ async def process_update_profile_message(message: Message, state: FSMContext):
                f"{get_text(lang, 'edit-middlename')}: {student.middle_name}\n" \
                f"{get_text(lang, 'edit-level')}: {get_text(lang, 'levels')[student.level_key]}\n" \
                f"{get_text(lang, 'edit-faculty')}: {get_text(lang, 'faculties')[student.faculty_key]}\n" \
-               f"{get_text(lang, 'edit-direction')}: {get_text(lang, "directions")[student.direction_key]}\n" \
+               f"{get_text(lang, 'edit-direction')}: {get_text(lang, 'directions')[student.direction_key]}\n" \
                f"{get_text(lang, 'edit-course')}: {student.course}\n" \
                f"{get_text(lang, 'edit-group')}: {student.group}\n\n"
     await message.answer(response, reply_markup=profile_buttons(lang))
