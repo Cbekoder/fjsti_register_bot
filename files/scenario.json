@@ -56,7 +56,7 @@
       "occupational-hygiene": "Mehnat gigiyenasi",
       "narcology": "Narkologiya",
       "nephrology": "Nefrologiya",
-      "nephrology-hemodialysis": "Nefrologiya gtmodializ bilan",
+      "nephrology-hemodialysis": "Nefrologiya gemodializ bilan",
       "neonatology": "Neonatologiya",
       "neurology": "Nevrologiya",
       "neurosurgery": "Neyroxirurgiya",
@@ -71,7 +71,9 @@
       "traumatology-orthopedics": "Travmatologiya va ortopediya",
       "infectious-diseases": "Yuqumli kasalliklar",
       "maxillofacial-surgery": "Yuz jag‘ jarroxligi",
-      "general-surgery": "Umumiy xirurgiya"
+      "general-surgery": "Umumiy xirurgiya",
+      "medical-biological-work": "Tibbiy-biologik ishi",
+      "urology": "Urologiya"
     },
     "menu-message": "Kerakli bo'limni tanlang: 📋",
     "menu-buttons": [

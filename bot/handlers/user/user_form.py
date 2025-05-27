@@ -48,7 +48,7 @@ async def process_level(callback_query: CallbackQuery, state: FSMContext):
             "pediatric-cardiorheumatology", "pediatric-nephrology",
             "pediatric-neurology", "pediatric-adolescent-gynecology",
             "pediatric-surgery", "dermatovenereology",
-            "epidemiology", "phthisiatry", "hematology-transfusiology",
+            "epidemiology", "phthisiatry",
             "internal-diseases-therapy", "hygiene", "communal-hygiene",
             "occupational-hygiene", "narcology", "nephrology", "cardiology",
             "nephrology-hemodialysis", "neonatology", "neurology",
@@ -80,7 +80,7 @@ async def process_faculty(callback_query: CallbackQuery, state: FSMContext):
             direction_list = ["dentistry", "pharmacy", "pediatrics"]
         case "medical-prevention":
             direction_list = ["biomedical-engineering", "fundamental-medicine", "nursing", "medical-prevention",
-                              "folk_medicine"]
+                              "folk_medicine", "medical-biological-work"]
         case "international":
             direction_list = ["general-medicine", "pediatrics"]
     await callback_query.message.edit_text(get_text(lang, 'enter-direction'),
