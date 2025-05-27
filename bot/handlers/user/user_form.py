@@ -16,7 +16,7 @@ from data.scenario import get_text
 from loader import dp, redis_cl, orm_async
 
 from main.models import Student
-from tuzilma.models import Group
+from tuzilma.models import Group, Level, Direction
 
 
 @dp.callback_query(UserForm.level, F.data.startswith("level"))
@@ -108,21 +108,28 @@ async def process_direction(callback_query: CallbackQuery, state: FSMContext):
 
 
 # Course handler
-async def get_groups(level_name: str, course_number: int, limit: int = 10) -> list:
-    # cache_key = f'group_names_{search_term.lower()}'
-    # groups = cache.get(cache_key)
-    # if groups is None:
-    #     cleaned_term = search_term.strip().replace(' ', '')
-    #     prefix = re.match(r'^([^-]+)', cleaned_term)
-    #     prefix = prefix.group(1) if prefix else cleaned_term
-    #     regex_pattern = rf'^{re.escape(prefix)}-\d{{2}}$'
-    queryset = Group.objects.filter(direction__level__name=level_name, course=course_number, is_active=True #).filter(
-    #     Q(name__iregex=regex_pattern) | Q(name__icontains=search_term)
-    ).values_list('name', flat=True)[:limit]
-    groups = await orm_async(queryset.__iter__)
-    groups = list(groups)
+async def get_groups(level_name: str, direction_name: str, course_number: int, limit: int = 10) -> list:
+    cache_key = f'group_names_{direction_name.lower()}'
+    groups = cache.get(cache_key)
+    if groups is None:
+        # cleaned_term = search_term.strip().replace(' ', '')
+        # prefix = re.match(r'^([^-]+)', cleaned_term)
+        # prefix = prefix.group(1) if prefix else cleaned_term
+        # regex_pattern = rf'^{re.escape(prefix)}-\d{{2}}$'
+        level = await orm_async(Level.objects.get, name=level_name)
 
-        # cache.set(cache_key, groups, timeout=3600)
+        direction = await orm_async(Direction.objects.get, name=direction_name, faculty__level=level)
+
+        groups_qs = Group.objects.filter(
+            direction=direction,
+            course=course_number,
+            is_active=True
+        ).values_list('name', flat=True)[:limit]
+
+        groups = await orm_async(groups_qs.__iter__)
+        groups = list(groups)
+
+        cache.set(cache_key, groups, timeout=3600)
     return groups
 
 
@@ -136,6 +143,7 @@ async def process_course(callback_query: CallbackQuery, state: FSMContext):
 
     data = await state.get_data()
     level = data.get('level')
+    direction_name = get_text('uz', 'directions')[data.get('direction')]
 
     global level_name
     if level == 'bachelor':
@@ -146,7 +154,7 @@ async def process_course(callback_query: CallbackQuery, state: FSMContext):
         level_name = "Ordinatura"
 
     course_number = int(data.get('course'))
-    matches = await get_groups(level_name, course_number, limit=100)
+    matches = await get_groups(level_name, direction_name, course_number, limit=100)
 
     await callback_query.message.reply(get_text(lang, 'select-group'), reply_markup=group_buttons(matches))
     await state.set_state(UserForm.group)

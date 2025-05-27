@@ -52,11 +52,13 @@ class Command(BaseCommand):
                 if pd.isna(direction_name):
                     self.stdout.write(self.style.WARNING(f'Missing Yo\'nalish value in row {index + 2}'))
                     continue
+
                 direction, created = Direction.objects.get_or_create(
                     name=direction_name,
-                    defaults={'faculty': faculty, 'is_active': True}
+                    faculty=faculty,
+                    defaults={'is_active': True}
                 )
-                self.stdout.write(f"Created/Found Direction: {direction_name}")
+                self.stdout.write(f"Created/Found Direction: {direction_name} (Faculty: {faculty_name})")
 
                 group_name = str(row['Guruh'])
                 course = row['Kurs']
@@ -66,7 +68,8 @@ class Command(BaseCommand):
                 group, created = Group.objects.get_or_create(
                     name=group_name,
                     direction=direction,
-                    defaults={'course': course, 'is_active': True}
+                    course=course,
+                    defaults={'is_active': True}
                 )
                 self.stdout.write(f"Created/Found Group: {group_name}, Course: {course}")
 

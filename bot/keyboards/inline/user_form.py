@@ -27,7 +27,7 @@ def faculty_buttons(lang='uz') -> InlineKeyboardMarkup:
                     text=faculty,
                     callback_data=f"faculty_{key}"
                 ),
-            ] for key, faculty in faculties.items() if key != 'master'
+            ] for key, faculty in faculties.items() if key not in ['master', 'ordinatura']
         ]
     )
     return buttons
