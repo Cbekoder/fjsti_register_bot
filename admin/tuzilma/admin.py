@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Level, Direction, Group, ScheduleUpload, ScheduleGet
+from .models import Level, Direction, Group, ScheduleUpload, ScheduleGet, Faculty
 
 
 @admin.register(Level)
@@ -12,18 +12,27 @@ class LevelAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     ordering = ('id', )
 
+
+@admin.register(Faculty)
+class FacultyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'level', 'is_active')
+    list_filter = ('level', 'is_active')
+    search_fields = ('name', 'level__name')
+    ordering = ('id', )
+
+
 @admin.register(Direction)
 class DirectionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'level', 'is_active')
+    list_display = ('id', 'name', 'faculty__level', 'is_active')
     list_display_links = ('id', 'name')
-    list_filter = ('is_active', 'level')
+    list_filter = ('is_active', 'faculty__level')
     search_fields = ('name',)
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'direction', 'course', 'is_active')
-    list_filter = ('direction__level', 'direction', 'course', 'is_active')
-    search_fields = ('name', 'direction__name', 'direction__level__name')
+    list_filter = ('direction__faculty__level', 'direction', 'course', 'is_active')
+    search_fields = ('name', 'direction__name', 'direction__faculty__level')
     ordering = ('id', )
 
 @admin.register(ScheduleUpload)

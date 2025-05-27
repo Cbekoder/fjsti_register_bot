@@ -4,14 +4,9 @@ from pathlib import Path
 from django.conf import settings
 from main.services import get_text
 
-LEVEL_NAME_CHOICES = (
-    ("Bakalavr", "Bakalavr"),
-    ("Magistr", "Magistr"),
-    ("Ordinatura", "Ordinatura"),
-)
 
 class Level(models.Model):
-    name = models.CharField(max_length=100, choices=LEVEL_NAME_CHOICES, unique=True)
+    name = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -21,9 +16,20 @@ class Level(models.Model):
     def __str__(self):
         return self.name
 
-class Direction(models.Model):
+
+class Faculty(models.Model):
     name = models.CharField(max_length=100)
     level = models.ForeignKey(Level, on_delete=models.SET_NULL, null=True, blank=False)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Fakultet "
+        verbose_name_plural = "Fakultetlar "
+
+
+class Direction(models.Model):
+    name = models.CharField(max_length=100)
+    faculty = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True, blank=False)
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -31,12 +37,12 @@ class Direction(models.Model):
         verbose_name_plural = "Ta'lim yo'nalishlari "
 
     def __str__(self):
-        return f"{self.name} | {self.level.name if self.level else 'N/A'}"
+        return f"{self.name} | {self.faculty.level.name if self.faculty else 'N/A'}"
 
 
 class Group(models.Model):
     name = models.CharField(max_length=100)
-    direction = models.ForeignKey(Direction, on_delete=models.CASCADE)
+    direction = models.ForeignKey(Direction, on_delete=models.SET_NULL, null=True, blank=False)
     course = models.SmallIntegerField(default=1)
     is_active = models.BooleanField(default=True)
 
