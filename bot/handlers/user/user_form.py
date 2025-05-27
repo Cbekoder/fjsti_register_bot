@@ -16,7 +16,7 @@ from data.scenario import get_text
 from loader import dp, redis_cl, orm_async
 
 from main.models import Student
-from tuzilma.models import Group, Level, Direction
+from tuzilma.models import Group, Level, Direction, Faculty
 
 
 @dp.callback_query(UserForm.level, F.data.startswith("level"))
@@ -108,7 +108,7 @@ async def process_direction(callback_query: CallbackQuery, state: FSMContext):
 
 
 # Course handler
-async def get_groups(level_name: str, direction_name: str, course_number: int, limit: int = 10) -> list:
+async def get_groups(level_name: str, faculty_name: str, direction_name: str, course_number: int, limit: int = 10) -> list:
     cache_key = f'group_names_{direction_name.lower()}'
     groups = cache.get(cache_key)
     if groups is None:
@@ -117,8 +117,9 @@ async def get_groups(level_name: str, direction_name: str, course_number: int, l
         # prefix = prefix.group(1) if prefix else cleaned_term
         # regex_pattern = rf'^{re.escape(prefix)}-\d{{2}}$'
         level = await orm_async(Level.objects.get, name=level_name)
+        faculty = await orm_async(Faculty.objects.get, name=faculty_name)
 
-        direction = await orm_async(Direction.objects.get, name=direction_name, faculty__level=level)
+        direction = await orm_async(Direction.objects.get, name=direction_name, faculty=faculty, faculty__level=level)
 
         groups_qs = Group.objects.filter(
             direction=direction,
@@ -143,6 +144,7 @@ async def process_course(callback_query: CallbackQuery, state: FSMContext):
 
     data = await state.get_data()
     level = data.get('level')
+    faculty_name = get_text('uz', 'faculties')[data.get('faculty')]
     direction_name = get_text('uz', 'directions')[data.get('direction')]
 
     global level_name
@@ -154,7 +156,7 @@ async def process_course(callback_query: CallbackQuery, state: FSMContext):
         level_name = "Ordinatura"
 
     course_number = int(data.get('course'))
-    matches = await get_groups(level_name, direction_name, course_number, limit=100)
+    matches = await get_groups(level_name, faculty_name, direction_name, course_number, limit=100)
 
     await callback_query.message.reply(get_text(lang, 'select-group'), reply_markup=group_buttons(matches))
     await state.set_state(UserForm.group)
