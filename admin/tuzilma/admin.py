@@ -22,7 +22,8 @@ class DirectionAdmin(admin.ModelAdmin):
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'direction', 'course', 'is_active')
-    list_filter = ('direction', 'course', 'is_active')
+    list_filter = ('direction__level', 'direction', 'course', 'is_active')
+    search_fields = ('name', 'direction__name', 'direction__level__name')
     ordering = ('id', )
 
 @admin.register(ScheduleUpload)

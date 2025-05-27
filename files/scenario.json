@@ -24,11 +24,10 @@
       "fundamental-medicine": "Fundamental tibbiyot 🔬",
       "folk_medicine": "Xalq tabobati 🏥",
 
-      "obstetrics": "Akusherlik 🤰",
+      "obstetrics": "Akusherlik va ginekologiya 🤰",
       "endocrinology": "Endokrinologiya 🦋",
       "hygiene": "Gigiena 🧼",
       "cardiology": "Kardiologiya ❤️",
-      "laboratory-work": "Laboratoria ishi 🧪",
       "morphology": "Morfologiya 🔍",
       "otorhinolaryngology": "Otorinolaringologiya 👂",
       "pathological-anatomy": "Patologik anatomiya 🔬",
@@ -37,10 +36,11 @@
       "therapy": "Terapiya 💊",
       "medical-biological-equipment": "Tibbiy-biologik apparatlar, tizimlar va majmualar ⚙️",
       "general-oncology": "Umumiy onkologiya 🎗️",
-      "urology": "Urologiya 🚻",
       "surgery": "Xirurgiya 🔪",
+      "pediatrics_m": "Pediatriya \uD83D\uDC76",
 
       "obstetrics-gynecology": "Akusherlik va ginekologiya 🤰",
+      "laboratory-work": "Laboratoria ishi 🧪",
       "allergy-clinical-immunology": "Allergologiya va klinik immunologiya 🩺",
       "anesthesiology-reanimation": "Anesteziologiya va reanimatologiya 💉",
       "pediatric-anesthesiology-reanimation": "Bolalar anesteziologiya va reanimatologiyasi 👶",
@@ -72,7 +72,8 @@
       "medical-radiology": "Tibbiy radiologiya 🩻",
       "traumatology-orthopedics": "Travmatologiya va ortopediya 🦴",
       "infectious-diseases": "Yuqumli kasalliklar 🦠",
-      "maxillofacial-surgery": "Yuz jag‘ jarroxligi 😷"
+      "maxillofacial-surgery": "Yuz jag‘ jarroxligi 😷",
+      "general-surgery": "Umumiy xirurgiya 🎗️"
     },
     "menu-message": "Kerakli bo'limni tanlang: 📋",
     "menu-buttons": [

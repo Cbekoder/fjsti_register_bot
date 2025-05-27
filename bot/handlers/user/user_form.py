@@ -32,12 +32,10 @@ async def process_level(callback_query: CallbackQuery, state: FSMContext):
     elif level_key == 'master':
         direction_list = [
             "obstetrics", "endocrinology", "hygiene",
-            "cardiology", "laboratory-work",
-            "morphology", "otorhinolaryngology",
-            "pathological-anatomy", "pediatrics",
+            "cardiology", "morphology", "pathological-anatomy", "pediatrics_m",
             "radiology-technology", "healthcare-management",
             "therapy", "medical-biological-equipment",
-            "general-oncology", "urology", "surgery"
+            "general-oncology", "surgery"
         ]
         await callback_query.message.edit_text(get_text(lang, "enter-specialty"),
                                                reply_markup=direction_buttons(lang, direction_list))
@@ -51,13 +49,15 @@ async def process_level(callback_query: CallbackQuery, state: FSMContext):
             "pediatric-neurology", "pediatric-adolescent-gynecology",
             "pediatric-surgery", "dermatovenereology",
             "epidemiology", "phthisiatry", "hematology-transfusiology",
-            "internal-diseases-therapy", "communal-hygiene",
-            "occupational-hygiene", "narcology", "nephrology",
+            "internal-diseases-therapy", "hygiene", "communal-hygiene",
+            "occupational-hygiene", "narcology", "nephrology", "cardiology",
             "nephrology-hemodialysis", "neonatology", "neurology",
-            "neurosurgery", "nutrition", "ophthalmology",
-            "psychiatry", "pulmonology", "rheumatology",
+            "neurosurgery", "nutrition", "ophthalmology", "endocrinology",
+            "psychiatry", "pulmonology", "rheumatology", "laboratory-work",
             "dentistry-therapeutic", "medical-psychology", "medical-radiology",
-            "traumatology-orthopedics", "infectious-diseases", "maxillofacial-surgery"
+            "traumatology-orthopedics", "infectious-diseases", "maxillofacial-surgery",
+            "pathological-anatomy", "otorhinolaryngology", "pediatrics_m", "dentistry",
+            "therapy", "general-oncology", "general-surgery", "urology",
         ]
         await callback_query.message.edit_text(get_text(lang, "enter-specialty"), reply_markup=direction_buttons(lang, direction_list))
         await state.update_data(faculty='master')
