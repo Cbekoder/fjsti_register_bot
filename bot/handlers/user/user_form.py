@@ -102,7 +102,7 @@ async def process_direction(callback_query: CallbackQuery, state: FSMContext):
     if level == 'bachelor':
         number_course = 7
     else:
-        number_course = 3
+        number_course = 4
     await callback_query.message.edit_text(get_text(lang, 'enter-course'), reply_markup=course_buttons(number_course))
     await state.set_state(UserForm.course)
 
