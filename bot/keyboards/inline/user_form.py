@@ -20,7 +20,6 @@ def level_buttons(lang='uz') -> InlineKeyboardMarkup:
 
 def faculty_buttons(lang='uz') -> InlineKeyboardMarkup:
     faculties = get_text(lang, 'faculties')
-    faculties.pop('master')
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -28,7 +27,7 @@ def faculty_buttons(lang='uz') -> InlineKeyboardMarkup:
                     text=faculty,
                     callback_data=f"faculty_{key}"
                 ),
-            ] for key, faculty in faculties.items()
+            ] for key, faculty in faculties.items() if key != 'master'
         ]
     )
     return buttons
