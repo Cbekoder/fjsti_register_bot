@@ -11,7 +11,8 @@
       "medical-prevention": "Tibbiy profilaktika va jamoat salomatligi",
       "international": "Xalqaro",
       "pediatrics": "Pediatriya",
-      "master": "Magistratura bo'limi"
+      "master": "Magistr",
+      "ordinatura": "Ordinatura"
     },
     "directions": {
       "biomedical-engineering": "Biotibbiyot muhandisligi",
@@ -22,7 +23,7 @@
       "pediatrics": "Pediatriya ishi",
       "dentistry": "Stomatologiya",
       "fundamental-medicine": "Fundamental tibbiyot",
-      "folk_medicine": "Xalq tabobati",
+      "folk_medicine": "Xalq tabobati ishi",
       "obstetrics": "Akusherlik va ginekologiya",
       "endocrinology": "Endokrinologiya",
       "hygiene": "Gigiena",
