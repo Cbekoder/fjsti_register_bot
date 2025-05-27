@@ -77,7 +77,18 @@ async def handle_kasallik_malumot(message: Message, state: FSMContext):
 @dp.message(F.text.in_(get_handler_keys("menu-buttons", 4)))
 async def handle_settings(message: Message):
     lang = await redis_cl.get(f"user:{message.from_user.id}:language")
-    await message.answer(get_text(lang, "menu-buttons")[4], reply_markup=settings_buttons(lang))
+
+    await state.set_state(RequestForm.description)
+    await state.update_data(to_service="custom-question")
+
+    await message.answer(get_text(lang, "custom-question"), reply_markup=request_cancel_button(lang))
+    await message.delete()
+
+
+@dp.message(F.text.in_(get_handler_keys("menu-buttons", 5)))
+async def handle_settings(message: Message):
+    lang = await redis_cl.get(f"user:{message.from_user.id}:language")
+    await message.answer(get_text(lang, "menu-buttons")[5], reply_markup=settings_buttons(lang))
     await message.delete()
 
 

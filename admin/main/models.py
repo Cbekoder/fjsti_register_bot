@@ -76,6 +76,8 @@ SERVICES_LIST = {
     "rental_contract": "Ijara shartnoma uchun ariza",
 
     "illness-inform": "Kasallik haqida ma’lumot",
+    "custom-question": "Qo'shimcha savol va takliflar",
+
 }
 
 back_office_services = ["changing_personal_data", "attendance", "graduation_paper", "diplom_request"]
