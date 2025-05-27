@@ -16,7 +16,7 @@ class LevelAdmin(admin.ModelAdmin):
 class DirectionAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'level', 'is_active')
     list_display_links = ('id', 'name')
-    list_filter = ('is_active',)
+    list_filter = ('is_active', 'level')
     search_fields = ('name',)
 
 @admin.register(Group)

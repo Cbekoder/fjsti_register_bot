@@ -82,7 +82,7 @@ async def process_faculty(callback_query: CallbackQuery, state: FSMContext):
             direction_list = ["biomedical-engineering", "fundamental-medicine", "nursing", "medical-prevention",
                               "folk_medicine"]
         case "international":
-            direction_list = ["general-medicine"]
+            direction_list = ["general-medicine", "pediatrics"]
     await callback_query.message.edit_text(get_text(lang, 'enter-direction'),
                                            reply_markup=direction_buttons(lang, direction_list))
 
