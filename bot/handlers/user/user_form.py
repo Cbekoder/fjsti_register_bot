@@ -108,6 +108,24 @@ async def process_direction(callback_query: CallbackQuery, state: FSMContext):
 
 
 # Course handler
+async def get_groups(level_name: str, course_number: int, limit: int = 10) -> list:
+    # cache_key = f'group_names_{search_term.lower()}'
+    # groups = cache.get(cache_key)
+    # if groups is None:
+    #     cleaned_term = search_term.strip().replace(' ', '')
+    #     prefix = re.match(r'^([^-]+)', cleaned_term)
+    #     prefix = prefix.group(1) if prefix else cleaned_term
+    #     regex_pattern = rf'^{re.escape(prefix)}-\d{{2}}$'
+    queryset = Group.objects.filter(direction__level__name=level_name, course=course_number, is_active=True #).filter(
+    #     Q(name__iregex=regex_pattern) | Q(name__icontains=search_term)
+    ).values_list('name', flat=True)[:limit]
+    groups = await orm_async(queryset.__iter__)
+    groups = list(groups)
+
+        # cache.set(cache_key, groups, timeout=3600)
+    return groups
+
+
 @dp.callback_query(UserForm.course)
 async def process_course(callback_query: CallbackQuery, state: FSMContext):
     user_id = callback_query.message.chat.id
@@ -115,34 +133,6 @@ async def process_course(callback_query: CallbackQuery, state: FSMContext):
     course_number = callback_query.data.split("_")[1]
     await state.update_data(course=course_number)
     await callback_query.answer(f"You selected {course_number} course.")
-    await callback_query.message.edit_text(get_text(lang, "enter-group"))
-    await state.set_state(UserForm.group)
-
-
-# Group handler
-async def get_groups(level_name: str, course_number: int, search_term: str, limit: int = 10) -> list:
-    cache_key = f'group_names_{search_term.lower()}'
-    groups = cache.get(cache_key)
-    if groups is None:
-        cleaned_term = search_term.strip().replace(' ', '')
-        prefix = re.match(r'^([^-]+)', cleaned_term)
-        prefix = prefix.group(1) if prefix else cleaned_term
-        regex_pattern = rf'^{re.escape(prefix)}-\d{{2}}$'
-        queryset = Group.objects.filter(direction__level__name=level_name, course=course_number, is_active=True).filter(
-            Q(name__iregex=regex_pattern) | Q(name__icontains=search_term)
-        ).values_list('name', flat=True)[:limit]
-        groups = await orm_async(queryset.__iter__)
-        groups = list(groups)
-
-        cache.set(cache_key, groups, timeout=3600)
-    return groups
-
-
-@dp.message(UserForm.group)
-async def process_group(message: Message, state: FSMContext):
-    user_id = message.from_user.id
-    lang = await redis_cl.get(f"user:{user_id}:language")
-
 
     data = await state.get_data()
     level = data.get('level')
@@ -155,16 +145,42 @@ async def process_group(message: Message, state: FSMContext):
     elif level == 'ordinatura':
         level_name = "Ordinatura"
 
-    group_guess = message.text.strip()
     course_number = int(data.get('course'))
-    matches = await get_groups(level_name, course_number, group_guess, limit=10)
+    matches = await get_groups(level_name, course_number, limit=100)
 
-    if not matches:
-        await message.reply(get_text(lang, "reenter-group"))
-        return
-
-    await message.reply(get_text(lang, 'select-group'), reply_markup=group_buttons(matches))
+    await callback_query.message.reply(get_text(lang, 'select-group'), reply_markup=group_buttons(matches))
     await state.set_state(UserForm.group)
+
+
+
+# Group handler
+# @dp.message(UserForm.group)
+# async def process_group(message: Message, state: FSMContext):
+#     user_id = message.from_user.id
+#     lang = await redis_cl.get(f"user:{user_id}:language")
+#
+#
+#     data = await state.get_data()
+#     level = data.get('level')
+#
+#     global level_name
+#     if level == 'bachelor':
+#         level_name = "Bakalavr"
+#     elif level == 'master':
+#         level_name = "Magistr"
+#     elif level == 'ordinatura':
+#         level_name = "Ordinatura"
+#
+#     group_guess = message.text.strip()
+#     course_number = int(data.get('course'))
+#     matches = await get_groups(level_name, course_number, group_guess, limit=10)
+#
+#     if not matches:
+#         await message.reply(get_text(lang, "reenter-group"))
+#         return
+#
+#     await message.reply(get_text(lang, 'select-group'), reply_markup=group_buttons(matches))
+#     await state.set_state(UserForm.group)
 
 
 @dp.callback_query(UserForm.group, F.data.startswith("group_"))
