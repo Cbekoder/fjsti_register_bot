@@ -91,7 +91,7 @@ class Direction(models.Model):
         verbose_name_plural = "Ta'lim yo'nalishlari "
 
     def __str__(self):
-        return self.name
+        return f"{self.name} | {self.level.name if self.level else 'N/A'}"
 
 
 class Group(models.Model):
