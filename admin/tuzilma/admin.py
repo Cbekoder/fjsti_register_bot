@@ -17,6 +17,7 @@ class DirectionAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'level', 'is_active')
     list_display_links = ('id', 'name')
     list_filter = ('is_active',)
+    search_fields = ('name',)
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
@@ -38,3 +39,4 @@ class ScheduleGetAdmin(admin.ModelAdmin):
         if self.model.objects.count() > 0:
             return False
         return super().has_add_permission(request)
+
