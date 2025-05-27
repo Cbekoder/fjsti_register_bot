@@ -108,22 +108,18 @@ async def process_direction(callback_query: CallbackQuery, state: FSMContext):
 
 
 # Course handler
-async def get_groups(level_name: str, faculty_name: str, direction_name: str, course_number: int, limit: int = 10) -> list:
-    cache_key = f'group_names_{direction_name.lower()}'
+async def get_groups(level_name: str, faculty_name: str, direction_name: str, course_number: int, limit: int) -> list:
+    cache_key = f'group_names_{level_name.lower()}_{faculty_name.lower()}_{direction_name.lower()}_{course_number}'
     groups = cache.get(cache_key)
     if groups is None:
-        # cleaned_term = search_term.strip().replace(' ', '')
-        # prefix = re.match(r'^([^-]+)', cleaned_term)
-        # prefix = prefix.group(1) if prefix else cleaned_term
-        # regex_pattern = rf'^{re.escape(prefix)}-\d{{2}}$'
         level = await orm_async(Level.objects.get, name=level_name)
         faculty = await orm_async(Faculty.objects.get, name=faculty_name)
 
         direction = await orm_async(Direction.objects.get, name=direction_name, faculty=faculty, faculty__level=level)
 
         groups_qs = Group.objects.filter(
+            course=int(course_number),
             direction=direction,
-            course=course_number,
             is_active=True
         ).values_list('name', flat=True)[:limit]
 
@@ -158,7 +154,7 @@ async def process_course(callback_query: CallbackQuery, state: FSMContext):
     course_number = int(data.get('course'))
     matches = await get_groups(level_name, faculty_name, direction_name, course_number, limit=100)
 
-    await callback_query.message.reply(get_text(lang, 'select-group'), reply_markup=group_buttons(matches))
+    await callback_query.message.edit_text(get_text(lang, 'select-group'), reply_markup=group_buttons(matches))
     await state.set_state(UserForm.group)
 
 

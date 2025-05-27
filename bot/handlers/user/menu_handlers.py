@@ -75,7 +75,7 @@ async def handle_kasallik_malumot(message: Message, state: FSMContext):
 
 
 @dp.message(F.text.in_(get_handler_keys("menu-buttons", 4)))
-async def handle_settings(message: Message):
+async def handle_settings(message: Message, state: FSMContext):
     lang = await redis_cl.get(f"user:{message.from_user.id}:language")
 
     await state.set_state(RequestForm.description)
