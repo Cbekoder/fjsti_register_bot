@@ -130,7 +130,7 @@ async def get_groups(level_name: str, course_number: int, search_term: str, limi
         regex_pattern = rf'^{re.escape(prefix)}-\d{{2}}$'
         queryset = Group.objects.filter(direction__level__name=level_name, course=course_number, is_active=True).filter(
             Q(name__iregex=regex_pattern) | Q(name__icontains=search_term)
-        ).values_list('nam  e', flat=True)[:limit]
+        ).values_list('name', flat=True)[:limit]
         groups = await orm_async(queryset.__iter__)
         groups = list(groups)
 
