@@ -1,12 +1,20 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Direction, Group, ScheduleUpload, ScheduleGet
+from .models import Level, Direction, Group, ScheduleUpload, ScheduleGet
 
+
+@admin.register(Level)
+class LevelAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'is_active')
+    list_display_links = ('id', 'name')
+    list_filter = ('is_active',)
+    search_fields = ('name',)
+    ordering = ('id', )
 
 @admin.register(Direction)
 class DirectionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'is_active')
+    list_display = ('id', 'name', 'level', 'is_active')
     list_display_links = ('id', 'name')
     list_filter = ('is_active',)
 

@@ -20,6 +20,7 @@ def level_buttons(lang='uz') -> InlineKeyboardMarkup:
 
 def faculty_buttons(lang='uz') -> InlineKeyboardMarkup:
     faculties = get_text(lang, 'faculties')
+    faculties.pop('master')
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -33,7 +34,9 @@ def faculty_buttons(lang='uz') -> InlineKeyboardMarkup:
     return buttons
 
 
-def direction_buttons(lang='uz') -> InlineKeyboardMarkup:
+def direction_buttons(lang, directions_list) -> InlineKeyboardMarkup:
+    if lang is None:
+        lang = 'uz'
     directions = get_text(lang, 'directions')
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -42,20 +45,20 @@ def direction_buttons(lang='uz') -> InlineKeyboardMarkup:
                     text=direction,
                     callback_data=f"direction_{key}"
                 ),
-            ] for key, direction in directions.items()
+            ] for key, direction in directions.items() if key in directions_list
         ]
     )
     return buttons
 
 
-def course_buttons() -> InlineKeyboardMarkup:
+def course_buttons(number_course) -> InlineKeyboardMarkup:
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
                     text=f"{number}",
                     callback_data=f"course_{number}"
-                ) for number in range(1, 7)
+                ) for number in range(1, number_course)
             ]
         ]
     )

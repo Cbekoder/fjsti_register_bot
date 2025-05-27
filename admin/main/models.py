@@ -18,6 +18,10 @@ class User(AbstractUser):
         verbose_name = "Admin "
         verbose_name_plural = "Adminlar "
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}".strip() if self.first_name and self.last_name else self.username
+
 
 
 class Student(models.Model):

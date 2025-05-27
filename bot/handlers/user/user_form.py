@@ -25,9 +25,43 @@ async def process_level(callback_query: CallbackQuery, state: FSMContext):
     lang = await redis_cl.get(f"user:{user_id}:language")
     level_key = callback_query.data.split("_")[1]
     await state.update_data(level=level_key)
-    await callback_query.answer(f"You selected {level_key} faculty.")
-    await callback_query.message.edit_text(get_text(lang, "enter-faculty"), reply_markup=faculty_buttons(lang))
-    await state.set_state(UserForm.faculty)
+    await callback_query.answer(f"You selected {level_key} level.")
+    if level_key == 'bachelor':
+        await callback_query.message.edit_text(get_text(lang, "enter-faculty"), reply_markup=faculty_buttons(lang))
+        await state.set_state(UserForm.faculty)
+    elif level_key == 'master':
+        direction_list = [
+            "obstetrics", "endocrinology", "hygiene",
+            "cardiology", "laboratory-work",
+            "morphology", "otorhinolaryngology",
+            "pathological-anatomy", "pediatrics",
+            "radiology-technology", "healthcare-management",
+            "therapy", "medical-biological-equipment",
+            "general-oncology", "urology", "surgery"
+        ]
+        await callback_query.message.edit_text(get_text(lang, "enter-specialty"),
+                                               reply_markup=direction_buttons(lang, direction_list))
+        await state.update_data(faculty='master')
+        await state.set_state(UserForm.direction)
+    elif level_key == 'ordinatura':
+        direction_list = [
+            "obstetrics-gynecology", "allergy-clinical-immunology",
+            "anesthesiology-reanimation", "pediatric-anesthesiology-reanimation",
+            "pediatric-cardiorheumatology", "pediatric-nephrology",
+            "pediatric-neurology", "pediatric-adolescent-gynecology",
+            "pediatric-surgery", "dermatovenereology",
+            "epidemiology", "phthisiatry", "hematology-transfusiology",
+            "internal-diseases-therapy", "communal-hygiene",
+            "occupational-hygiene", "narcology", "nephrology",
+            "nephrology-hemodialysis", "neonatology", "neurology",
+            "neurosurgery", "nutrition", "ophthalmology",
+            "psychiatry", "pulmonology", "rheumatology",
+            "dentistry-therapeutic", "medical-psychology", "medical-radiology",
+            "traumatology-orthopedics", "infectious-diseases", "maxillofacial-surgery"
+        ]
+        await callback_query.message.edit_text(get_text(lang, "enter-specialty"), reply_markup=direction_buttons(lang, direction_list))
+        await state.update_data(faculty='master')
+        await state.set_state(UserForm.direction)
 
 
 # Faculty handler
@@ -36,9 +70,22 @@ async def process_faculty(callback_query: CallbackQuery, state: FSMContext):
     user_id = callback_query.message.chat.id
     lang = await redis_cl.get(f"user:{user_id}:language")
     faculty_key = callback_query.data.split("_")[1]
-    await state.update_data(faculty=faculty_key)
     await callback_query.answer(f"You selected {faculty_key} faculty.")
-    await callback_query.message.edit_text(get_text(lang, 'enter-direction'), reply_markup=direction_buttons(lang))
+    await state.update_data(faculty=faculty_key)
+    global direction_list
+    match faculty_key:
+        case "general-medicine":
+            direction_list = ["general-medicine"]
+        case "pediatrics":
+            direction_list = ["dentistry", "pharmacy", "pediatrics"]
+        case "medical-prevention":
+            direction_list = ["biomedical-engineering", "fundamental-medicine", "nursing", "medical-prevention",
+                              "folk_medicine"]
+        case "international":
+            direction_list = ["general-medicine"]
+    await callback_query.message.edit_text(get_text(lang, 'enter-direction'),
+                                           reply_markup=direction_buttons(lang, direction_list))
+
     await state.set_state(UserForm.direction)
 
 
@@ -50,7 +97,13 @@ async def process_direction(callback_query: CallbackQuery, state: FSMContext):
     direction_key = callback_query.data.split("_")[1]
     await state.update_data(direction=direction_key)
     await callback_query.answer(f"You selected {direction_key} direction.")
-    await callback_query.message.edit_text(get_text(lang, 'enter-course'), reply_markup=course_buttons())
+    data = await state.get_data()
+    level = data.get('level')
+    if level == 'bachelor':
+        number_course = 7
+    else:
+        number_course = 3
+    await callback_query.message.edit_text(get_text(lang, 'enter-course'), reply_markup=course_buttons(number_course))
     await state.set_state(UserForm.course)
 
 
@@ -67,7 +120,7 @@ async def process_course(callback_query: CallbackQuery, state: FSMContext):
 
 
 # Group handler
-async def get_groups(search_term: str, limit: int = 10) -> list:
+async def get_groups(level_name: str, course_number: int, search_term: str, limit: int = 10) -> list:
     cache_key = f'group_names_{search_term.lower()}'
     groups = cache.get(cache_key)
     if groups is None:
@@ -75,7 +128,7 @@ async def get_groups(search_term: str, limit: int = 10) -> list:
         prefix = re.match(r'^([^-]+)', cleaned_term)
         prefix = prefix.group(1) if prefix else cleaned_term
         regex_pattern = rf'^{re.escape(prefix)}-\d{{2}}$'
-        queryset = Group.objects.filter(is_active=True).filter(
+        queryset = Group.objects.filter(direction__level__name=level_name, course=course_number, is_active=True).filter(
             Q(name__iregex=regex_pattern) | Q(name__icontains=search_term)
         ).values_list('name', flat=True)[:limit]
         groups = await orm_async(queryset.__iter__)
@@ -90,8 +143,21 @@ async def process_group(message: Message, state: FSMContext):
     user_id = message.from_user.id
     lang = await redis_cl.get(f"user:{user_id}:language")
 
+
+    data = await state.get_data()
+    level = data.get('level')
+
+    global level_name
+    if level == 'bachelor':
+        level_name = "Bakalavr"
+    elif level == 'master':
+        level_name = "Magistr"
+    elif level == 'ordinatura':
+        level_name = "Ordinatura"
+
     group_guess = message.text.strip()
-    matches = await get_groups(group_guess, limit=10)
+    course_number = int(data.get('course'))
+    matches = await get_groups(level_name, course_number, group_guess, limit=10)
 
     if not matches:
         await message.reply(get_text(lang, "reenter-group"))
@@ -220,9 +286,6 @@ async def process_phone_number(message: Message, state: FSMContext):
     await message.answer(get_text(lang, "menu-message"), reply_markup=menu_buttons(lang))
 
 
-
-
-
 @dp.callback_query(F.data.startswith("edit_"))
 async def process_edit_profile(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.answer(cache_time=10)
@@ -254,7 +317,6 @@ async def process_edit_profile(callback_query: CallbackQuery, state: FSMContext)
             await callback_query.message.edit_text(get_text(lang, "enter-level"), reply_markup=level_buttons(lang))
 
 
-
 @dp.message(ProfileUpdate.value)
 async def process_update_profile_message(message: Message, state: FSMContext):
     user_id = message.from_user.id
@@ -272,7 +334,18 @@ async def process_update_profile_message(message: Message, state: FSMContext):
             student.middle_name = new_value
         case "group":
             group_guess = new_value.strip()
-            matches = await get_groups(group_guess, limit=10)
+
+            level = student.level_key
+            course_number = student.course
+            global level_name
+            if level == 'bachelor':
+                level_name = "Bakalavr"
+            elif level == 'master':
+                level_name = "Magistr"
+            elif level == 'ordinatura':
+                level_name = "Ordinatura"
+
+            matches = await get_groups(level_name, course_number, group_guess, limit=10)
             if not matches:
                 await message.reply(get_text(lang, "reenter-group"))
                 return
