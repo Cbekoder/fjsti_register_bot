@@ -5,7 +5,8 @@ from aiogram.types import Message
 from keyboards.default.menu_keyboard import menu_buttons, hemis_menu_buttons
 from states.user_form import RequestForm
 from data.scenario import get_text, get_handler_keys
-from keyboards.default.common_buttons import request_continue_buttons, request_confirm_buttons, request_cancel_button
+from keyboards.default.common_buttons import request_continue_buttons, request_cancel_button
+from keyboards.inline.common_buttons import request_confirm_buttons
 from loader import dp, redis_cl, orm_async
 
 
@@ -14,7 +15,7 @@ from loader import dp, redis_cl, orm_async
 async def handle_hemis_0(message: Message, state: FSMContext):
     lang = await redis_cl.get(f"user:{message.from_user.id}:language")
 
-    await state.set_state(RequestForm.description)
+    await state.set_state(RequestForm.confirmation)
     await state.update_data(to_service="recover_password")
 
     await message.answer(get_text(lang, "hemis-0"), reply_markup=request_confirm_buttons(lang))

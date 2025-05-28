@@ -1,4 +1,5 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from data.scenario import get_text
 
 language_buttons = InlineKeyboardMarkup(
     inline_keyboard=[
@@ -19,3 +20,16 @@ language_buttons = InlineKeyboardMarkup(
 
     ]
 )
+
+
+def request_confirm_buttons(lang='uz') -> InlineKeyboardMarkup:
+    confirm_buttons = get_text(lang, "confirm")[::-1]
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text=confirm_text, callback_data=confirm_text)
+                for confirm_text in confirm_buttons
+            ]
+        ]
+    )
+    return keyboard

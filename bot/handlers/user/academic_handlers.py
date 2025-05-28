@@ -4,7 +4,8 @@ from aiogram.fsm.context import FSMContext
 from states.user_form import RequestForm
 from keyboards.default.menu_keyboard import menu_buttons
 from data.scenario import get_text, get_handler_keys
-from keyboards.default.common_buttons import request_continue_buttons, request_confirm_buttons
+from keyboards.default.common_buttons import request_continue_buttons
+from keyboards.inline.common_buttons import request_confirm_buttons
 from loader import dp, redis_cl
 
 
@@ -57,7 +58,7 @@ async def handle_academic_4(message: Message, state: FSMContext):
 async def handle_academic_5(message: Message, state: FSMContext):
     lang = await redis_cl.get(f"user:{message.from_user.id}:language")
 
-    await state.set_state(RequestForm.description)
+    await state.set_state(RequestForm.confirmation)
     await state.update_data(to_service="transcript_paper")
 
     await message.answer(get_text(lang, "academic-5"), reply_markup=request_confirm_buttons(lang))
@@ -67,7 +68,7 @@ async def handle_academic_5(message: Message, state: FSMContext):
 async def handle_academic_6(message: Message, state: FSMContext):
     lang = await redis_cl.get(f"user:{message.from_user.id}:language")
 
-    await state.set_state(RequestForm.description)
+    await state.set_state(RequestForm.confirmation)
     await state.update_data(to_service="gpa_request")
 
     await message.answer(get_text(lang, "academic-6"), reply_markup=request_confirm_buttons(lang))

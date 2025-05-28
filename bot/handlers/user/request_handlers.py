@@ -2,14 +2,15 @@ import os
 import logging
 from aiogram import F
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from django.conf import settings
 from django.core.files import File
 from main.models import StudentRequest, Student
 from keyboards.default.menu_keyboard import menu_buttons
 from states.user_form import RequestForm
 from data.scenario import get_text, get_handler_keys
-from keyboards.default.common_buttons import request_continue_buttons, request_confirm_buttons
+from keyboards.default.common_buttons import request_continue_buttons
+from keyboards.inline.common_buttons import request_confirm_buttons
 from loader import dp, redis_cl, orm_async
 from asgiref.sync import sync_to_async
 
@@ -75,8 +76,16 @@ async def handle_description(message: Message, state: FSMContext):
 async def handle_confirmation(message: Message, state: FSMContext):
     user_id = message.from_user.id
     lang = await redis_cl.get(f"user:{user_id}:language")
+    await message.answer(get_text(lang, "use-buttons"), reply_markup=request_confirm_buttons(lang))
 
-    if message.text in get_handler_keys("confirm", 0):
+
+@dp.callback_query(RequestForm.confirmation)
+async def handle_confirmation_callback(callback_query: CallbackQuery, state: FSMContext):
+    await callback_query.answer(cache_time=10)
+    user_id = callback_query.from_user.id
+    lang = await redis_cl.get(f"user:{user_id}:language")
+
+    if callback_query.data in get_handler_keys("confirm", 0):
         try:
             student = await orm_async(Student.objects.get, telegram_id=user_id)
             data = await state.get_data()
@@ -101,15 +110,16 @@ async def handle_confirmation(message: Message, state: FSMContext):
             await sync_to_async(request.save)()
 
             await state.clear()
-            await message.answer(
+            await callback_query.message.answer(
                 f"{get_text(lang, 'request-number')}{request.id:05d}\n\n{get_text(lang, 'success')}",
                 reply_markup=menu_buttons(lang)
             )
+            await callback_query.message.delete()
         except Exception as e:
             logger.error(f"Error creating StudentRequest: {str(e)}")
-            error_text = str(get_text(lang, "error-request"))
-            await message.answer(error_text, reply_markup=menu_buttons(lang))
+            await callback_query.message.answer(get_text(lang, "error-request"), reply_markup=menu_buttons(lang))
+            await callback_query.message.delete()
             await state.clear()
     else:
-        await message.answer(get_text(lang, "cancel-finish"), reply_markup=menu_buttons(lang))
+        await callback_query.message.edit_text(get_text(lang, "cancel-finish"), reply_markup=menu_buttons(lang))
         await state.clear()
