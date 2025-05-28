@@ -31,22 +31,21 @@ async def get_schedule_day(message: Message, state: FSMContext):
 
     choosen_day = message.text
 
-    # if choosen_day == get_text(lang, 'today'):
-    #     weekday_number = datetime.today().weekday()
-    #     response = await get_schedule(user_id, weekday_number)
-    # elif choosen_day in get_text(lang, 'weekdays'):
-    #     weekday_number = get_text(lang, 'weekdays').index(choosen_day)
-    #     response = await get_schedule(user_id, weekday_number)
-    # elif choosen_day in get_handler_keys('cancel'):
-    #     await state.clear()
-    #     await message.answer(get_text(lang, 'menu-message'), reply_markup=menu_buttons(lang))
-    #     return
-    # else:
-    #     await message.answer(get_text(lang, 'wrong-day'), reply_markup=weekday_buttons(lang))
-    #     return
-    # await message.answer(response, reply_markup=menu_buttons(lang))
+    if choosen_day == get_text(lang, 'today'):
+        weekday_number = datetime.today().weekday()
+        response = await get_schedule(user_id, weekday_number)
+    elif choosen_day in get_text(lang, 'weekdays'):
+        weekday_number = get_text(lang, 'weekdays').index(choosen_day)
+        response = await get_schedule(user_id, weekday_number)
+    elif choosen_day in get_handler_keys('cancel'):
+        await state.clear()
+        await message.answer(get_text(lang, 'menu-message'), reply_markup=menu_buttons(lang))
+        return
+    else:
+        await message.answer(get_text(lang, 'wrong-day'), reply_markup=weekday_buttons(lang))
+        return
+    await message.answer(response, reply_markup=menu_buttons(lang))
     await state.clear()
-    await message.answer(get_text(lang, 'schedule-not-found'), reply_markup=menu_buttons(lang))
 
 
 
@@ -68,7 +67,7 @@ async def handle_hemis_sorovlar(message: Message):
 async def handle_kasallik_malumot(message: Message, state: FSMContext):
     lang = await redis_cl.get(f"user:{message.from_user.id}:language")
 
-    await state.set_state(RequestForm.description)
+    await state.set_state(RequestForm.file)
     await state.update_data(to_service="illness-inform")
 
     await message.answer(get_text(lang, "illness-inform"), reply_markup=request_cancel_button(lang))
