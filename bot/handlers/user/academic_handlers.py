@@ -60,7 +60,7 @@ async def handle_academic_5(message: Message, state: FSMContext):
     await state.set_state(RequestForm.description)
     await state.update_data(to_service="transcript_paper")
 
-    await message.answer(get_text(lang, "academic-5"), reply_markup=request_continue_buttons(lang))
+    await message.answer(get_text(lang, "academic-5"), reply_markup=request_confirm_buttons(lang))
 
 
 @dp.message(F.text.in_(get_handler_keys("academic-buttons", 6)))
@@ -70,7 +70,7 @@ async def handle_academic_6(message: Message, state: FSMContext):
     await state.set_state(RequestForm.description)
     await state.update_data(to_service="gpa_request")
 
-    await message.answer(get_text(lang, "academic-6"), reply_markup=request_continue_buttons(lang))
+    await message.answer(get_text(lang, "academic-6"), reply_markup=request_confirm_buttons(lang))
     
     
 @dp.message(F.text.in_(get_handler_keys("academic-buttons", 7)))
@@ -80,7 +80,7 @@ async def handle_academic_7(message: Message, state: FSMContext):
     await state.set_state(RequestForm.file)
     await state.update_data(to_service="rental_contract")
 
-    await message.answer(get_text(lang, "academic-7"), reply_markup=request_continue_buttons(lang))
+    await message.answer(get_text(lang, "academic-7"), reply_markup=request_confirm_buttons(lang))
 
     
 @dp.message(F.text.in_(get_handler_keys("academic-buttons", 8)))

@@ -17,7 +17,7 @@ async def handle_hemis_0(message: Message, state: FSMContext):
     await state.set_state(RequestForm.description)
     await state.update_data(to_service="recover_password")
 
-    await message.answer(get_text(lang, "hemis-0"), reply_markup=request_continue_buttons(lang))
+    await message.answer(get_text(lang, "hemis-0"), reply_markup=request_confirm_buttons(lang))
 
 
 @dp.message(F.text.in_(get_handler_keys("hemis-buttons", 1)))
