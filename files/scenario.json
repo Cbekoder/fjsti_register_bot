@@ -82,6 +82,7 @@
       "\uD83D\uDCBB HEMIS-axborot tizimi yuzasidan so’rovlar",
       "\uD83E\uDE7A Kasalligi to’g’risidagi ma’lumot",
       "\uD83D\uDCDD Savollar va takliflar",
+      "\uD83D\uDDC2 Qo'shimcha ariza qoldirish",
       "⚙\uFE0F Sozlamalar"
     ],
     "settings-buttons": [
@@ -128,6 +129,7 @@
     "hemis-6": "Bitiruv qog'ozini olishni xohlaysizmi? 🎉",
     "illness-inform": "Kasallik haqida ma’lumot berish uchun ariza berishga izoh bering.",
     "custom-question": "Savol va takliflaringiz uchun izoh bering.",
+    "custom-request": "Ariza berish uchun fayl tanlang:",
     "got-file": "Fayl qabul qilindi. Iltimos, o'z izohingizni qoldiring yoki \"Davom etish\" tugmasini bosing. ✅",
     "skip-file": "Fayl yuklanmadi. Izoh qoldiring:",
     "error-file": "Faylni yuklashda xatolik yuz berdi. Iltimos, faylni qayta yuklang yoki \"Davom etish\" tugmasini bosing. ❌",
@@ -264,6 +266,7 @@
       "\uD83D\uDCBB Запросы по информационной системе HEMIS",
       "\uD83E\uDE7A Справка о болезни",
       "\uD83D\uDCDD Вопросы и предложения",
+      "\uD83D\uDDC2 Оставить дополнительную заявку",
       "⚙\uFE0F Настройки"
     ],
     "settings-buttons": [
@@ -310,6 +313,7 @@
     "hemis-6": "Хотите получить выпускной документ? 🎉",
     "illness-inform": "Оставьте комментарий для подачи заявки о предоставлении информации о болезни.",
     "custom-question": "Оставьте комментарий для вопросов и предложений.",
+    "custom-request": "Выберите файл для подачи заявки:",
     "got-file": "Файл принят. Пожалуйста, оставьте комментарий или нажмите кнопку \"Продолжить\". ✅",
     "skip-file": "Файл не загружен. Оставьте комментарий:",
     "error-file": "Произошла ошибка при загрузке файла. Пожалуйста, загрузите файл снова или нажмите кнопку \"Продолжить\". ❌",
@@ -446,6 +450,7 @@
       "\uD83D\uDCBB HEMIS Information System Requests",
       "\uD83E\uDE7A Illness Information",
       "\uD83D\uDCDD Questions and Suggestions",
+      "\uD83D\uDDC2 Additional application submission",
       "⚙\uFE0F Settings"
     ],
     "settings-buttons": [
@@ -492,6 +497,7 @@
     "hemis-6": "Would you like to obtain a graduation document? 🎉",
     "illness-inform": "Provide a comment for submitting a request regarding illness information.",
     "custom-question": "Provide a comment for your questions and suggestions.",
+    "custom-request": "Select a file to submit your application:",
     "got-file": "File received. Please leave your comment or click the \"Continue\" button. ✅",
     "skip-file": "File not uploaded. Leave a comment:",
     "error-file": "An error occurred while uploading the file. Please upload the file again or click the \"Continue\" button. ❌",

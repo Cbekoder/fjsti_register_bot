@@ -45,7 +45,7 @@ async def get_schedule_day(message: Message, state: FSMContext):
     #     await message.answer(get_text(lang, 'wrong-day'), reply_markup=weekday_buttons(lang))
     #     return
     # await message.answer(response, reply_markup=menu_buttons(lang))
-    # await state.clear()
+    await state.clear()
     await message.answer(get_text(lang, 'schedule-not-found'), reply_markup=menu_buttons(lang))
 
 
@@ -85,11 +85,21 @@ async def handle_settings(message: Message, state: FSMContext):
     await message.answer(get_text(lang, "custom-question"), reply_markup=request_cancel_button(lang))
     await message.delete()
 
-
 @dp.message(F.text.in_(get_handler_keys("menu-buttons", 5)))
+async def handle_settings(message: Message, state: FSMContext):
+    lang = await redis_cl.get(f"user:{message.from_user.id}:language")
+
+    await state.set_state(RequestForm.file)
+    await state.update_data(to_service="custom-request")
+
+    await message.answer(get_text(lang, "custom-request"), reply_markup=request_cancel_button(lang))
+    await message.delete()
+
+
+@dp.message(F.text.in_(get_handler_keys("menu-buttons", 6)))
 async def handle_settings(message: Message):
     lang = await redis_cl.get(f"user:{message.from_user.id}:language")
-    await message.answer(get_text(lang, "menu-buttons")[5], reply_markup=settings_buttons(lang))
+    await message.answer(get_text(lang, "menu-buttons")[6], reply_markup=settings_buttons(lang))
     await message.delete()
 
 

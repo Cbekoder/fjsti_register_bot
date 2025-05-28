@@ -22,6 +22,7 @@ def format_schedule(schedule_data):
         3: "11:30 – 12:50",
         4: "13:30 – 14:50",
         5: "15:00 – 16:20",
+        6: "16:30 – 17:50",
     }
 
     formatted_lessons = []

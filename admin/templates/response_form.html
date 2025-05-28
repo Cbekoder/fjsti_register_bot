@@ -90,7 +90,10 @@
             <label for="file49" class="col-sm-3 col-form-label">Fayl</label>
             <div class="col-sm-9">
                 {% if request.file %}
-                <a href="{{ request.file.url }}" class="btn btn-link" target="_blank">Yuklangan faylni ko'rish</a>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">folder</i></span>
+                <a href="{{ request.file.url }}" class="form-control" target="_blank">{{ request.file.name }}</a>
+                </div>
                 {% else %}
                 <div class="input-group">
                     <span class="input-group-text"><i class="material-icons-outlined fs-5">folder</i></span>

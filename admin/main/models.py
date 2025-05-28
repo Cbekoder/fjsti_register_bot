@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models, transaction
 
-from tuzilma.models import Level, Faculty, Direction, Group
+from tuzilma.models import Level, Faculty, Direction, Group, ScheduleUpload
 from .services import Telegram, get_text
 
 OFFICE_CHOICES = (
@@ -52,6 +52,14 @@ class Student(models.Model):
     def full_name(self):
         return f"{self.first_name or ''} {self.last_name or ''} {self.middle_name or ''}".strip()
 
+    @property
+    def schedule_file(self):
+        try:
+            schedule_upload = ScheduleUpload.objects.get(direction=self.direction, course=self.course)
+            return schedule_upload.file_path if schedule_upload else None
+        except ScheduleUpload.DoesNotExist:
+            return None
+
 
 STATUS_CHOICES = (
     ('new', 'New'),
@@ -76,6 +84,7 @@ SERVICES_LIST = {
 
     "illness-inform": "Kasallik haqida ma’lumot",
     "custom-question": "Qo'shimcha savol va takliflar",
+    "custom-request": "Qo'shimcha fayl va so'rovlar",
 
 }
 
