@@ -1,32 +1,62 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from modeltranslation.admin import TranslationAdmin
 
 from .models import Level, Direction, Group, ScheduleUpload, ScheduleGet, Faculty
 
 
 @admin.register(Level)
-class LevelAdmin(admin.ModelAdmin):
+class LevelAdmin(TranslationAdmin):
     list_display = ('id', 'name', 'is_active')
     list_display_links = ('id', 'name')
     list_filter = ('is_active',)
     search_fields = ('name',)
     ordering = ('id', )
 
+    class Media:
+        js = (
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+            'modeltranslation/js/tabbed_translation_fields.js',
+        )
+        css = {
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
 
 @admin.register(Faculty)
-class FacultyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'level', 'is_active')
+class FacultyAdmin(TranslationAdmin):
+    list_display = ('name_uz', 'level', 'is_active')
     list_filter = ('level', 'is_active')
-    search_fields = ('name', 'level__name')
+    search_fields = ('name_uz', 'level__name')
     ordering = ('id', )
 
+    class Media:
+        js = (
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+            'modeltranslation/js/tabbed_translation_fields.js',
+        )
+        css = {
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
 
 @admin.register(Direction)
-class DirectionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'faculty__level', 'is_active')
-    list_display_links = ('id', 'name')
+class DirectionAdmin(TranslationAdmin):
+    list_display = ('id', 'name_uz', 'faculty__level', 'is_active')
+    list_display_links = ('id', 'name_uz')
     list_filter = ('is_active', 'faculty__level')
     search_fields = ('name',)
+
+    class Media:
+        js = (
+            'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+            'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
+            'modeltranslation/js/tabbed_translation_fields.js',
+        )
+        css = {
+            'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
+        }
+
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):

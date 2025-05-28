@@ -1,5 +1,5 @@
 import re
-import difflib
+from difflib import get_close_matches
 
 from aiogram import F
 from aiogram.fsm.context import FSMContext
@@ -109,16 +109,31 @@ async def process_direction(callback_query: CallbackQuery, state: FSMContext):
 
 # Course handler
 async def get_groups(level_name: str, faculty_name: str, direction_name: str, course_number: int, limit: int) -> list:
-    cache_key = f'group_names_{level_name.lower()}_{faculty_name.lower()}_{direction_name.lower()}_{course_number}'
-    groups = cache.get(cache_key)
-    if groups is None:
+    # cache_key = f'group_names_{level_name.lower()}_{faculty_name.lower()}_{direction_name.lower()}_{course_number}'
+    # groups = cache.get(cache_key)
+    # if groups is None:
+        # 1. Level ni olish
         level = await orm_async(Level.objects.get, name=level_name)
-        faculty = await orm_async(Faculty.objects.get, name=faculty_name)
+        faculty = await orm_async(Faculty.objects.get, name=faculty_name, level=level)
 
-        direction = await orm_async(Direction.objects.get, name=direction_name, faculty=faculty, faculty__level=level)
+        # 3. Direction nomlarini olish
+        directions_names = await orm_async(
+            list,
+            Direction.objects.filter(faculty=faculty).values_list('name', flat=True)
+        )
 
+        # 4. Eng yaqin nomni topish
+        closest_direction_name = get_close_matches(direction_name, directions_names, n=1)
+        if not closest_direction_name:
+            # Mos keladigan yo'q, null yoki exception
+            return []
+
+        # 5. Eng yaqin nomga mos Direction ni olish
+        direction = await orm_async(Direction.objects.get, name=closest_direction_name[0], faculty=faculty)
+
+        # 6. Guruhlarni olish
         groups_qs = Group.objects.filter(
-            course=int(course_number),
+            course=course_number,
             direction=direction,
             is_active=True
         ).values_list('name', flat=True)[:limit]
@@ -126,8 +141,8 @@ async def get_groups(level_name: str, faculty_name: str, direction_name: str, co
         groups = await orm_async(groups_qs.__iter__)
         groups = list(groups)
 
-        cache.set(cache_key, groups, timeout=3600)
-    return groups
+        # cache.set(cache_key, groups, timeout=3600)
+        return groups
 
 
 @dp.callback_query(UserForm.course)

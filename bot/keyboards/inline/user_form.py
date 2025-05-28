@@ -1,33 +1,38 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+
+from tuzilma.models import Level, Faculty, Direction
 from data.scenario import get_text
+from django.utils import translation
 
 
 def level_buttons(lang='uz') -> InlineKeyboardMarkup:
-    levels = get_text(lang, 'levels')
+    translation.activate(lang)
+    levels = Level.objects.all()
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text=level,
-                    callback_data=f'level_{key}'
+                    text=level.name,
+                    callback_data=f'level_{level.id}'
                 )
-            ] for key, level in levels.items()
+            ] for level in levels
         ]
     )
     return buttons
 
 
 def faculty_buttons(lang='uz') -> InlineKeyboardMarkup:
-    faculties = get_text(lang, 'faculties')
+    translation.activate(lang)
+    faculties = Faculty.objects.filter(is_active=True)
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text=faculty,
-                    callback_data=f"faculty_{key}"
+                    text=faculty.name,
+                    callback_data=f"faculty_{faculty.id}"
                 ),
-            ] for key, faculty in faculties.items() if key not in ['master', 'ordinatura']
+            ] for faculty in faculties
         ]
     )
     return buttons
