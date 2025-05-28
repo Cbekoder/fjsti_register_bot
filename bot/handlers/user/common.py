@@ -29,6 +29,6 @@ async def language_handler(callback_query: CallbackQuery, state: FSMContext) -> 
         await callback_query.message.answer(get_text(language, "lang-selected"), reply_markup=settings_buttons(language))
         await callback_query.message.delete()
     else:
-        buttons = level_buttons(language)
+        buttons = await level_buttons(language)
         await callback_query.message.edit_text(get_text(language, "enter-level"), reply_markup=buttons)
         await state.set_state(UserForm.level)

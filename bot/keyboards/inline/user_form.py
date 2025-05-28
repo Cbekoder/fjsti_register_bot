@@ -1,14 +1,14 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-
 from tuzilma.models import Level, Faculty, Direction
 from data.scenario import get_text
 from django.utils import translation
+from loader import orm_async
 
 
-def level_buttons(lang='uz') -> InlineKeyboardMarkup:
+async def level_buttons(lang='uz') -> InlineKeyboardMarkup:
     translation.activate(lang)
-    levels = Level.objects.all()
+    levels = await orm_async(list, Level.objects.all())
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -22,9 +22,9 @@ def level_buttons(lang='uz') -> InlineKeyboardMarkup:
     return buttons
 
 
-def faculty_buttons(lang='uz') -> InlineKeyboardMarkup:
+async def faculty_buttons(lang='uz') -> InlineKeyboardMarkup:
     translation.activate(lang)
-    faculties = Faculty.objects.filter(is_active=True)
+    faculties = await orm_async(list, Faculty.objects.filter(is_active=True))
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -32,48 +32,47 @@ def faculty_buttons(lang='uz') -> InlineKeyboardMarkup:
                     text=faculty.name,
                     callback_data=f"faculty_{faculty.id}"
                 ),
-            ] for faculty in faculties
+            ] for faculty in faculties if faculty.is_active
         ]
     )
     return buttons
 
 
-def direction_buttons(lang, directions_list) -> InlineKeyboardMarkup:
-    if lang is None:
-        lang = 'uz'
-    directions = get_text(lang, 'directions')
+async def direction_buttons(faculty_id, lang='uz') -> InlineKeyboardMarkup:
+    translation.activate(lang)
+    directions = await orm_async(list, Direction.objects.filter(faculty__id=faculty_id))
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text=direction,
-                    callback_data=f"direction_{key}"
+                    text=direction.name,
+                    callback_data=f"direction_{direction.id}"
                 ),
-            ] for key, direction in directions.items() if key in directions_list
+            ] for direction in directions
         ]
     )
     return buttons
 
 
-def course_buttons(number_course) -> InlineKeyboardMarkup:
+def course_buttons(max_course) -> InlineKeyboardMarkup:
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
                     text=f"{number}",
                     callback_data=f"course_{number}"
-                ) for number in range(1, number_course)
+                ) for number in range(1, max_course + 1)
             ]
         ]
     )
     return buttons
 
 
-def group_buttons(groups : list) -> InlineKeyboardMarkup:
+def group_buttons(groups: list) -> InlineKeyboardMarkup:
     inline_keyboard = []
     for i in range(0, len(groups), 2):
         row = [
-            InlineKeyboardButton(text=group, callback_data=f"group_{group}")
+            InlineKeyboardButton(text=group.name, callback_data=f"group_{group.id}")
             for group in groups[i:i + 2]
         ]
         inline_keyboard.append(row)

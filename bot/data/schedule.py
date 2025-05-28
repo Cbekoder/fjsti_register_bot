@@ -49,7 +49,7 @@ def format_schedule(schedule_data):
 async def get_schedule(user_id, weekday_number):
     student = await orm_async(Student.objects.get, telegram_id=user_id)
     lang = student.language
-    group_exists = await orm_async(Group.objects.filter(name=student.group).exists)
+    group_exists = await orm_async(Group.objects.filter(id=student.group).exists)
     if group_exists:
         group = await orm_async(Group.objects.filter(name=student.group).last)
         direction = await orm_async(Direction.objects.get, pk=group.direction_id)

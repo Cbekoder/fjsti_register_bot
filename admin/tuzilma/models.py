@@ -26,6 +26,9 @@ class Faculty(models.Model):
         verbose_name = "Fakultet "
         verbose_name_plural = "Fakultetlar "
 
+    def __str__(self):
+        return self.name
+
 
 class Direction(models.Model):
     name = models.CharField(max_length=100, verbose_name="Yo‘nalish nomi")

@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models, transaction
+
+from tuzilma.models import Level, Faculty, Direction, Group
 from .services import Telegram, get_text
 
 OFFICE_CHOICES = (
@@ -29,14 +31,11 @@ class Student(models.Model):
     username = models.CharField(max_length=200, null=True, blank=True)
     language = models.CharField(max_length=2, default='uz')
     is_registered = models.BooleanField(default=False)
-    level = models.CharField(max_length=200, null=True, blank=True)
-    level_key = models.CharField(max_length=200, null=True, blank=True)
-    faculty = models.CharField(max_length=200, null=True, blank=True)
-    faculty_key = models.CharField(max_length=200, null=True, blank=True)
-    direction = models.CharField(max_length=200, null=True, blank=True)
-    direction_key = models.CharField(max_length=200, null=True, blank=True)
+    level = models.ForeignKey(Level, on_delete=models.SET_NULL, null=True, blank=True)
+    faculty = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True, blank=True)
+    direction = models.ForeignKey(Direction, on_delete=models.SET_NULL, null=True, blank=True)
     course = models.SmallIntegerField(default=1, null=True, blank=True)
-    group = models.CharField(max_length=100, null=True, blank=True)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Guruh")
     first_name = models.CharField(max_length=200, null=True, blank=True)
     last_name = models.CharField(max_length=200, null=True, blank=True)
     middle_name = models.CharField(max_length=200, null=True, blank=True)

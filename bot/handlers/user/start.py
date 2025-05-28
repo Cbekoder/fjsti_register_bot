@@ -22,17 +22,18 @@ async def command_start_handler(message: Message, state: FSMContext) -> None:
     if exists:
         student = await orm_async(Student.objects.get, telegram_id=user_id)
 
-        language = await redis_cl.get(f"user:{user_id}:language")
+        lang = await redis_cl.get(f"user:{user_id}:language")
 
-        if not language:
+        if not lang:
             await redis_cl.set(f"user:{user_id}:language", student.language)
-            language = student.language
+            lang = student.language
 
         if student.is_registered:
-            await message.answer(get_text(language, "menu-message"), reply_markup=menu_buttons(language))
+            await message.answer(get_text(lang, "menu-message"), reply_markup=menu_buttons(lang))
             return
         else:
-            await message.answer(get_text(language, "enter-level"), reply_markup=level_buttons(language))
+            buttons = await level_buttons(lang)
+            await message.answer(get_text(lang, "enter-level"), reply_markup=buttons)
             await state.set_state(UserForm.level)
             return
 

@@ -1,12 +1,11 @@
 import re
 from difflib import get_close_matches
 
+from django.core.cache import cache
+from django.db.models import Q, Max
 from aiogram import F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
-from django.core.cache import cache
-
-from django.db.models import Q
 from keyboards.inline.user_form import faculty_buttons, direction_buttons, course_buttons, group_buttons, level_buttons
 from keyboards.default.menu_keyboard import menu_buttons, settings_buttons
 from keyboards.default.common_buttons import phone_request_keyboard
@@ -23,45 +22,23 @@ from tuzilma.models import Group, Level, Direction, Faculty
 async def process_level(callback_query: CallbackQuery, state: FSMContext):
     user_id = callback_query.message.chat.id
     lang = await redis_cl.get(f"user:{user_id}:language")
-    level_key = callback_query.data.split("_")[1]
-    await state.update_data(level=level_key)
-    await callback_query.answer(f"You selected {level_key} level.")
-    if level_key == 'bachelor':
-        await callback_query.message.edit_text(get_text(lang, "enter-faculty"), reply_markup=faculty_buttons(lang))
+    level_id = callback_query.data.split("_")[1]
+    await state.update_data(level=level_id)
+    await callback_query.answer(cache_time=10)
+    level = await orm_async(Level.objects.get, id=level_id)
+    if level.name_uz.lower() == 'bakalavr':
+        buttons = await faculty_buttons(lang)
+        await callback_query.message.edit_text(get_text(lang, "enter-faculty"), reply_markup=buttons)
         await state.set_state(UserForm.faculty)
-    elif level_key == 'master':
-        direction_list = [
-            "obstetrics", "endocrinology", "hygiene",
-            "cardiology", "morphology", "pathological-anatomy", "pediatrics_m",
-            "radiology-technology", "healthcare-management",
-            "therapy", "medical-biological-equipment",
-            "general-oncology", "surgery"
-        ]
-        await callback_query.message.edit_text(get_text(lang, "enter-specialty"),
-                                               reply_markup=direction_buttons(lang, direction_list))
-        await state.update_data(faculty='master')
+    elif level.name_uz.lower() in ['magistr', 'ordinatura']:
+        faculty = await orm_async(Faculty.objects.filter(level=level).last)
+        buttons = await direction_buttons(faculty.id, lang)
+        await callback_query.message.edit_text(get_text(lang, "enter-specialty"), reply_markup=buttons)
+        await state.update_data(faculty=faculty.id)
         await state.set_state(UserForm.direction)
-    elif level_key == 'ordinatura':
-        direction_list = [
-            "obstetrics-gynecology", "allergy-clinical-immunology",
-            "anesthesiology-reanimation", "pediatric-anesthesiology-reanimation",
-            "pediatric-cardiorheumatology", "pediatric-nephrology",
-            "pediatric-neurology", "pediatric-adolescent-gynecology",
-            "pediatric-surgery", "dermatovenereology",
-            "epidemiology", "phthisiatry",
-            "internal-diseases-therapy", "hygiene", "communal-hygiene",
-            "occupational-hygiene", "narcology", "nephrology", "cardiology",
-            "nephrology-hemodialysis", "neonatology", "neurology",
-            "neurosurgery", "nutrition", "ophthalmology", "endocrinology",
-            "psychiatry", "pulmonology", "rheumatology", "laboratory-work",
-            "dentistry-therapeutic", "medical-psychology", "medical-radiology",
-            "traumatology-orthopedics", "infectious-diseases", "maxillofacial-surgery",
-            "pathological-anatomy", "otorhinolaryngology", "pediatrics_m", "dentistry",
-            "therapy", "general-oncology", "general-surgery", "urology",
-        ]
-        await callback_query.message.edit_text(get_text(lang, "enter-specialty"), reply_markup=direction_buttons(lang, direction_list))
-        await state.update_data(faculty='master')
-        await state.set_state(UserForm.direction)
+    else:
+        await callback_query.message.edit_text(get_text(lang, "error-occured"))
+
 
 
 # Faculty handler
@@ -69,22 +46,11 @@ async def process_level(callback_query: CallbackQuery, state: FSMContext):
 async def process_faculty(callback_query: CallbackQuery, state: FSMContext):
     user_id = callback_query.message.chat.id
     lang = await redis_cl.get(f"user:{user_id}:language")
-    faculty_key = callback_query.data.split("_")[1]
-    await callback_query.answer(f"You selected {faculty_key} faculty.")
-    await state.update_data(faculty=faculty_key)
-    global direction_list
-    match faculty_key:
-        case "general-medicine":
-            direction_list = ["general-medicine"]
-        case "pediatrics":
-            direction_list = ["dentistry", "pharmacy", "pediatrics"]
-        case "medical-prevention":
-            direction_list = ["biomedical-engineering", "fundamental-medicine", "nursing", "medical-prevention",
-                              "folk_medicine", "medical-biological-work"]
-        case "international":
-            direction_list = ["general-medicine", "pediatrics"]
-    await callback_query.message.edit_text(get_text(lang, 'enter-direction'),
-                                           reply_markup=direction_buttons(lang, direction_list))
+    faculty_id = callback_query.data.split("_")[1]
+    await callback_query.answer(cache_time=10)
+    await state.update_data(faculty=faculty_id)
+    buttons = await direction_buttons(faculty_id, lang)
+    await callback_query.message.edit_text(get_text(lang, 'enter-direction'), reply_markup=buttons)
 
     await state.set_state(UserForm.direction)
 
@@ -92,84 +58,34 @@ async def process_faculty(callback_query: CallbackQuery, state: FSMContext):
 # Direction handler
 @dp.callback_query(UserForm.direction, F.data.startswith("direction_"))
 async def process_direction(callback_query: CallbackQuery, state: FSMContext):
+    await callback_query.answer(cache_time=10)
     user_id = callback_query.message.chat.id
     lang = await redis_cl.get(f"user:{user_id}:language")
-    direction_key = callback_query.data.split("_")[1]
-    await state.update_data(direction=direction_key)
-    await callback_query.answer(f"You selected {direction_key} direction.")
-    data = await state.get_data()
-    level = data.get('level')
-    if level == 'bachelor':
-        number_course = 7
-    else:
-        number_course = 4
-    await callback_query.message.edit_text(get_text(lang, 'enter-course'), reply_markup=course_buttons(number_course))
+
+    direction_id = callback_query.data.split("_")[1]
+    await state.update_data(direction=direction_id)
+    courses = await orm_async(Group.objects.filter(direction__id=direction_id).aggregate, Max('course'))
+    max_course = await orm_async(int, courses.get('course__max'))
+    await callback_query.message.edit_text(get_text(lang, 'enter-course'), reply_markup=course_buttons(max_course))
     await state.set_state(UserForm.course)
 
 
 # Course handler
-async def get_groups(level_name: str, faculty_name: str, direction_name: str, course_number: int, limit: int) -> list:
-    # cache_key = f'group_names_{level_name.lower()}_{faculty_name.lower()}_{direction_name.lower()}_{course_number}'
-    # groups = cache.get(cache_key)
-    # if groups is None:
-        # 1. Level ni olish
-        level = await orm_async(Level.objects.get, name=level_name)
-        faculty = await orm_async(Faculty.objects.get, name=faculty_name, level=level)
-
-        # 3. Direction nomlarini olish
-        directions_names = await orm_async(
-            list,
-            Direction.objects.filter(faculty=faculty).values_list('name', flat=True)
-        )
-
-        # 4. Eng yaqin nomni topish
-        closest_direction_name = get_close_matches(direction_name, directions_names, n=1)
-        if not closest_direction_name:
-            # Mos keladigan yo'q, null yoki exception
-            return []
-
-        # 5. Eng yaqin nomga mos Direction ni olish
-        direction = await orm_async(Direction.objects.get, name=closest_direction_name[0], faculty=faculty)
-
-        # 6. Guruhlarni olish
-        groups_qs = Group.objects.filter(
-            course=course_number,
-            direction=direction,
-            is_active=True
-        ).values_list('name', flat=True)[:limit]
-
-        groups = await orm_async(groups_qs.__iter__)
-        groups = list(groups)
-
-        # cache.set(cache_key, groups, timeout=3600)
-        return groups
-
-
 @dp.callback_query(UserForm.course)
 async def process_course(callback_query: CallbackQuery, state: FSMContext):
+    await callback_query.answer(cache_time=10)
     user_id = callback_query.message.chat.id
     lang = await redis_cl.get(f"user:{user_id}:language")
     course_number = callback_query.data.split("_")[1]
     await state.update_data(course=course_number)
-    await callback_query.answer(f"You selected {course_number} course.")
 
     data = await state.get_data()
-    level = data.get('level')
-    faculty_name = get_text('uz', 'faculties')[data.get('faculty')]
-    direction_name = get_text('uz', 'directions')[data.get('direction')]
-
-    global level_name
-    if level == 'bachelor':
-        level_name = "Bakalavr"
-    elif level == 'master':
-        level_name = "Magistr"
-    elif level == 'ordinatura':
-        level_name = "Ordinatura"
-
+    direction_id = data.get('direction')
     course_number = int(data.get('course'))
-    matches = await get_groups(level_name, faculty_name, direction_name, course_number, limit=100)
 
-    await callback_query.message.edit_text(get_text(lang, 'select-group'), reply_markup=group_buttons(matches))
+    groups = await orm_async(list, Group.objects.filter(direction__id=direction_id, course=course_number))
+
+    await callback_query.message.edit_text(get_text(lang, 'select-group'), reply_markup=group_buttons(groups))
     await state.set_state(UserForm.group)
 
 
@@ -271,12 +187,9 @@ async def process_phone_number(message: Message, state: FSMContext):
     data = await state.get_data()
     await Student.objects.filter(telegram_id=user_id).aupdate(
         is_registered=True,
-        level=get_text('uz', 'levels')[data.get('level')],
-        level_key=data.get('level'),
-        faculty=get_text('uz', 'faculties')[data.get('faculty')],
-        faculty_key=data.get('faculty'),
-        direction=get_text('uz', 'directions')[data.get('direction')],
-        direction_key=data.get('direction'),
+        level=data.get('level'),
+        faculty=data.get('faculty'),
+        direction=data.get('direction'),
         course=data.get('course'),
         group=data.get('group'),
         first_name=data.get('first_name'),

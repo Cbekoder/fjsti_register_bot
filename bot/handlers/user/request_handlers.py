@@ -21,6 +21,11 @@ async def handle_file(message: Message, state: FSMContext):
     lang = await redis_cl.get(f"user:{message.from_user.id}:language")
     file_id = None
 
+    if message.text == get_text(lang, "continue"):
+        await state.set_state(RequestForm.description)
+        await message.answer(get_text(lang, "skip-file"), reply_markup=request_continue_buttons(lang))
+        return
+
     if message.document:
         file_id = message.document.file_id
         file_name = message.document.file_name or f"{file_id}.bin"
@@ -58,8 +63,10 @@ async def handle_file(message: Message, state: FSMContext):
 @dp.message(RequestForm.description)
 async def handle_description(message: Message, state: FSMContext):
     lang = await redis_cl.get(f"user:{message.from_user.id}:language")
-    if message.text not in get_handler_keys("continue", 0):
+    if message.text != get_text(lang, "continue"):
         await state.update_data(description=message.text)
+    else:
+        await state.update_data(description="Izoh yo'q")
 
     await state.set_state(RequestForm.confirmation)
     await message.answer(get_text(lang, "confirmation"), reply_markup=request_confirm_buttons(lang))
