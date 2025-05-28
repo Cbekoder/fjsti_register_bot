@@ -6,8 +6,8 @@ from main.services import get_text
 
 
 class Level(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    is_active = models.BooleanField(default=True)
+    name = models.CharField(max_length=100, unique=True, verbose_name="Nomi")
+    is_active = models.BooleanField(default=True, verbose_name="Faolmi")
 
     class Meta:
         verbose_name = "Ta'lim darajasi "
@@ -18,9 +18,9 @@ class Level(models.Model):
 
 
 class Faculty(models.Model):
-    name = models.CharField(max_length=100)
-    level = models.ForeignKey(Level, on_delete=models.SET_NULL, null=True, blank=False)
-    is_active = models.BooleanField(default=True)
+    name = models.CharField(max_length=100, verbose_name="Fakultet nomi")
+    level = models.ForeignKey(Level, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Daraja")
+    is_active = models.BooleanField(default=True, verbose_name="Faolmi")
 
     class Meta:
         verbose_name = "Fakultet "
@@ -28,9 +28,9 @@ class Faculty(models.Model):
 
 
 class Direction(models.Model):
-    name = models.CharField(max_length=100)
-    faculty = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True, blank=False)
-    is_active = models.BooleanField(default=True)
+    name = models.CharField(max_length=100, verbose_name="Yo‘nalish nomi")
+    faculty = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Fakultet")
+    is_active = models.BooleanField(default=True, verbose_name="Faolmi")
 
     class Meta:
         verbose_name = "Ta'lim yo'nalishi "
@@ -41,10 +41,10 @@ class Direction(models.Model):
 
 
 class Group(models.Model):
-    name = models.CharField(max_length=100)
-    direction = models.ForeignKey(Direction, on_delete=models.SET_NULL, null=True, blank=False)
-    course = models.SmallIntegerField(default=1)
-    is_active = models.BooleanField(default=True)
+    name = models.CharField(max_length=100, verbose_name="Guruh nomi")
+    direction = models.ForeignKey(Direction, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Yo‘nalish")
+    course = models.SmallIntegerField(default=1, verbose_name="Kurs")
+    is_active = models.BooleanField(default=True, verbose_name="Faolmi")
 
     class Meta:
         verbose_name = "Guruh "
@@ -54,12 +54,11 @@ class Group(models.Model):
         return self.name
 
 
-
 class ScheduleUpload(models.Model):
-    direction = models.ForeignKey(Direction, on_delete=models.SET_NULL, null=True, blank=False)
-    course = models.SmallIntegerField()
-    file = models.FileField(upload_to='schedules/')
-    created_at = models.DateTimeField(auto_now_add=True)
+    direction = models.ForeignKey(Direction, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Yo‘nalish")
+    course = models.SmallIntegerField(verbose_name="Kurs")
+    file = models.FileField(upload_to='schedules/', verbose_name="Fayl")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Yuklangan vaqt")
 
     class Meta:
         verbose_name = "Jadval Yuklash"
@@ -78,7 +77,6 @@ class ScheduleUpload(models.Model):
             if custom_storage.exists(file_name):
                 custom_storage.delete(file_name)
 
-                # Save the new file with the specified name
             new_path = custom_storage.save(file_name, self.file)
             self.file.name = new_path
 
@@ -86,18 +84,15 @@ class ScheduleUpload(models.Model):
 
     @property
     def file_path(self):
-        """
-        Return the absolute path to the file.
-        """
         if self.file:
             SCHEDULES_STORAGE_PATH = Path(settings.BASE_DIR).parent / "files/schedules"
             return SCHEDULES_STORAGE_PATH / self.file.name
-        return None  #
+        return None
 
 
 class ScheduleGet(models.Model):
-    direction = models.ForeignKey(Direction, on_delete=models.SET_NULL, null=True, blank=False)
-    course = models.SmallIntegerField()
+    direction = models.ForeignKey(Direction, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Yo‘nalish")
+    course = models.SmallIntegerField(verbose_name="Kurs")
 
     class Meta:
         verbose_name = "Jadval shabloni"
