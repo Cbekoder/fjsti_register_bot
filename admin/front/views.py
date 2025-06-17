@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 from django.views import View
 from django.db.models import Q
 from main.models import Student, StudentRequest
@@ -15,6 +16,8 @@ from main.models import Student, StudentRequest
 
 class LoginView(View):
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('home')
         return render(request, "login.html")
 
     def post(self, request):
@@ -34,61 +37,59 @@ def logout_view(request):
     return redirect('login')
 
 
-
 class HomeView(View):
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('login')
+
         total_requests = StudentRequest.objects.count()
-        new_requests = StudentRequest.objects.filter(Q(status="new") | Q(status="in_progress")).count()
+        new_requests = StudentRequest.objects.filter(status="new").count()
+        in_progress_requests = StudentRequest.objects.filter(status="in_progress").count()
         completed_requests = StudentRequest.objects.filter(status='completed').count()
         rejected_requests = StudentRequest.objects.filter(status='rejected').count()
 
-        monthly_data = (
-            StudentRequest.objects
-            .annotate(month=TruncMonth('created_at'))
-            .values('month')
-            .annotate(count=Count('id'))
-            .order_by('month')
-        )
 
-        service_stats = (
-            StudentRequest.objects
-            .values('service_slug')
-            .annotate(total=Count('id'))
-        )
-
-        status_data = StudentRequest.objects.values('status').annotate(count=Count('id'))
-        total = StudentRequest.objects.count()
-        status_percentages = [
-            {"status": s['status'], "percent": round(s['count'] * 100 / total, 1)}
-            for s in status_data
+        UZBEK_MONTHS = [
+            "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
+            "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"
         ]
 
-        today = timezone.now()
-        last_month = today - timedelta(days=30)
+        # End of current month (May 2025)
+        end_date = timezone.now().replace(hour=23, minute=59, second=59, microsecond=0)
+        # Start of June 2024 (12 months ago)
+        start_date = end_date - relativedelta(months=11)
+        start_date = start_date.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
-        current_month_requests = StudentRequest.objects.filter(created_at__gte=last_month).count()
-
-        previous_month = last_month - timedelta(days=30)
-        previous_requests = StudentRequest.objects.filter(
-            created_at__gte=previous_month,
-            created_at__lt=last_month
+        last_year_requests = StudentRequest.objects.filter(
+            created_at__gte=start_date,
+            created_at__lte=end_date
         ).count()
+        # List of month starts
+        all_months = [start_date + relativedelta(months=i) for i in range(12)]
 
-        growth = ((current_month_requests - previous_requests) / previous_requests) * 100 if previous_requests else 100
+        # Generate monthly counts
+        monthly_data_list = []
+        for idx, (start, end) in enumerate(zip(all_months, all_months[1:] + [all_months[-1] + relativedelta(months=1)])):
+            count = StudentRequest.objects.filter(
+                created_at__gte=start,
+                created_at__lt=end
+            ).count()
+
+            month_name = UZBEK_MONTHS[start.month - 1]  # month: 1-12
+            monthly_data_list.append({
+                'month': month_name,
+                'count': count
+            })
 
         context = {
             "total_requests": total_requests,
             "new_requests": new_requests,
+            "in_progress_requests": in_progress_requests,
             "completed_requests": completed_requests,
             "rejected_requests": rejected_requests,
-            "monthly_data": list(monthly_data),
-            "service_stats": list(service_stats),
-            "status_percentages": status_percentages,
-            "current_month_requests": current_month_requests,
-            "previous_month_requests": previous_requests,
-            "growth": round(growth, 1),
+            "compare_percentages": int((completed_requests + rejected_requests) / total_requests * 100) if total_requests else 0,
+            "last_year_requests": last_year_requests,
+            "monthly_data": monthly_data_list,
         }
 
         return render(request, "index.html", context)

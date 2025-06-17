@@ -21,11 +21,21 @@
             </div>
         </div>
         <div class="row mb-3">
+            <label for="input433" class="col-sm-3 col-form-label">Daraja</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">school</i></span>
+                    <input type="text" class="form-control" id="input433" value="{{ request.student.level.name }}"
+                           placeholder="Fakultet" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
             <label for="input43" class="col-sm-3 col-form-label">Fakultet</label>
             <div class="col-sm-9">
                 <div class="input-group">
                     <span class="input-group-text"><i class="material-icons-outlined fs-5">apps</i></span>
-                    <input type="text" class="form-control" id="input43" value="{{ request.student.faculty }}"
+                    <input type="text" class="form-control" id="input43" value="{{ request.student.faculty.name }}"
                            placeholder="Fakultet" disabled>
                 </div>
             </div>
@@ -34,8 +44,8 @@
             <label for="input44" class="col-sm-3 col-form-label">Yo'nalish</label>
             <div class="col-sm-9">
                 <div class="input-group">
-                    <span class="input-group-text"><i class="material-icons-outlined fs-5">school</i></span>
-                    <input type="text" class="form-control" id="input44" value="{{ request.student.direction }}"
+                    <span class="input-group-text"><i class="material-icons-outlined fs-5">explore</i></span>
+                    <input type="text" class="form-control" id="input44" value="{{ request.student.direction.name }}"
                            placeholder="Yo'nalish" disabled>
                 </div>
             </div>
@@ -92,7 +102,7 @@
                 {% if request.file %}
                 <div class="input-group">
                     <span class="input-group-text"><i class="material-icons-outlined fs-5">folder</i></span>
-                <a href="{{ request.file.url }}" class="form-control" target="_blank">{{ request.file.name }}</a>
+                    <a href="{{ request.file.url }}" class="form-control text-primary" target="_blank">{{ request.file.name }}</a>
                 </div>
                 {% else %}
                 <div class="input-group">

@@ -1,7 +1,9 @@
-from django.db import models
-from django.core.files.storage import FileSystemStorage
 from pathlib import Path
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
+from django.core.files.storage import FileSystemStorage
+from django.db import models
 from main.services import get_text
 
 
@@ -60,36 +62,44 @@ class Group(models.Model):
 class ScheduleUpload(models.Model):
     direction = models.ForeignKey(Direction, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Yo‘nalish")
     course = models.SmallIntegerField(verbose_name="Kurs")
-    file = models.FileField(upload_to='schedules/', verbose_name="Fayl")
+    file = models.FileField(
+        upload_to='schedules/',
+        validators=[FileExtensionValidator(['xlsx'])],
+        verbose_name="Fayl"
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Yuklangan vaqt")
 
     class Meta:
         verbose_name = "Jadval Yuklash"
-        verbose_name_plural = "Jadvallar "
+        verbose_name_plural = "Jadvallar"
         ordering = ['-created_at']
 
+
     def save(self, *args, **kwargs):
-        self.SCHEDULES_STORAGE_PATH = Path(settings.BASE_DIR).parent / "files/schedules"
-        self.SCHEDULES_STORAGE_PATH.mkdir(parents=True, exist_ok=True)
-
-        custom_storage = FileSystemStorage(location=self.SCHEDULES_STORAGE_PATH)
-
         if self.file:
             file_name = f"{self.direction.name}_{self.course}_jadval.xlsx"
 
-            if custom_storage.exists(file_name):
-                custom_storage.delete(file_name)
+            ScheduleUpload.objects.filter(
+                direction=self.direction,
+                course=self.course
+            ).exclude(pk=self.pk).delete()
 
-            new_path = custom_storage.save(file_name, self.file)
-            self.file.name = new_path
+            if self.file.storage.exists(f"schedules/{file_name}"):
+                self.file.storage.delete(f"schedules/{file_name}")
+
+            self.file.name = file_name
 
         super().save(*args, **kwargs)
 
     @property
     def file_path(self):
         if self.file:
-            SCHEDULES_STORAGE_PATH = Path(settings.BASE_DIR).parent / "files/schedules"
-            return SCHEDULES_STORAGE_PATH / self.file.name
+            return Path(settings.MEDIA_ROOT) / self.file.name
+        return None
+
+    def get_absolute_url(self):
+        if self.file:
+            return self.file.url
         return None
 
 

@@ -5,6 +5,22 @@
 
 {% block page_title %}Statistika{% endblock %}
 
+{% block styles %}
+<style>
+    #pieChart {
+        max-width: 400px;
+        width: 100%;
+        max-height: 400px;
+    }
+    #lineChart {
+        /*max-width: 600px;*/
+        width: 100%;
+        height: 100%;
+        /*max-height: 350px;*/
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-xxl-12 d-flex align-items-stretch">
@@ -12,7 +28,7 @@
             <div class="card-body position-relative p-4">
                 <div class="row">
                     <div class="col-12 col-sm-7">
-                        <div class="d-flex align-items-center gap-3 mb-5">
+                        <div class="d-flex align-items-center gap-3 mb-4">
                             <img src="{% static 'images/logo-icon.png' %}" class="rounded-circle bg-grd-info p-1"
                                  width="60" height="60" alt="user">
                             <div class="">
@@ -23,17 +39,17 @@
                         </div>
                         <div class="d-flex align-items-center gap-5">
                             <div class="">
-                                <h4 class="mb-1 fw-semibold d-flex align-content-center">{{ total_requests }}<i
+                                <h1 class="mb-1 fw-semibold d-flex align-content-center">{{ total_requests }}<i
                                         class="ti ti-arrow-up-right fs-5 lh-base text-success"></i>
-                                </h4>
+                                </h1>
                                 <p class="mb-3">Jami so'rovlar soni</p>
                                 <div class="progress mb-0" style="height:5px;">
-                                    <div class="progress-bar bg-grd-success" role="progressbar" style="width: 60%"
+                                    <div class="progress-bar bg-grd-success" role="progressbar"
+                                         style="width: {{ compare_percentages }}%"
                                          aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                             </div>
                             <div class="vr"></div>
-
                         </div>
                     </div>
                     <div class="col-12 col-sm-5">
@@ -49,17 +65,19 @@
         <div class="card w-100 rounded-4">
             <div class="card-body">
                 <div class="text-center">
-                    <h6 class="mb-0">Jami so'rovlar</h6>
+                    <h6 class="mb-0">Oylik So'rovlar</h6>
                 </div>
-                <div class="mt-4" id="chart5"></div>
-                <p>Platformadagi umumiy so'rovlar</p>
+                <div class="mt-4">
+                    <canvas id="lineChart"></canvas> <!-- Ensure canvas tag is here -->
+                </div>
+                <p>So‘nggi 12 oy ichidagi so‘rovlar soni</p>
                 <div class="d-flex align-items-center gap-3 mt-4">
                     <div class="">
-                        <h1 class="mb-0 text-primary">{{ total_requests }}</h1>
+                        <h1 class="mb-0 text-primary">{{ last_year_requests }}</h1>
                     </div>
                     <div class="d-flex align-items-center align-self-end">
-                        <p class="mb-0 text-success">34.5%</p>
-                        <span class="material-icons-outlined text-success">expand_less</span>
+                        <p class="mb-0 text">so'rovlar</p>
+<!--                        <span class="material-icons-outlined text-success">expand_less</span>-->
                     </div>
                 </div>
             </div>
@@ -74,73 +92,169 @@
                             <h5 class="mb-0">So'rovlar holati bo'yicha</h5>
                         </div>
                     </div>
+                    <div class="d-flex justify-content-center align-items-center gap-3">
+                        <canvas id="pieChart"></canvas>
+                    </div>
                     <div class="d-flex flex-column gap-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <p class="mb-0 d-flex align-items-center gap-2 w-25" style="font-size: 1.125rem;"><span
-                                    class="material-icons-outlined fs-6 text-primary" style="font-size: 1rem;">schedule</span>Yangi</p>
+                                    class="material-icons-outlined fs-4 text-primary"
+                                    style="font-size: 1rem;">move_to_inbox</span>Yangi</p>
                             <div class="">
                                 <p class="mb-0" style="font-size: 1.125rem;">{{ new_requests }}</p>
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-between">
                             <p class="mb-0 d-flex align-items-center gap-2 w-25" style="font-size: 1.125rem;"><span
-                                    class="material-icons-outlined fs-6 text-success" style="font-size: 1rem;">done</span>Bajarilgan</p>
+                                    class="material-icons-outlined fs-4 text-warning"
+                                    style="font-size: 1rem;">schedule</span>Jarayonda</p>
+                            <div class="">
+                                <p class="mb-0" style="font-size: 1.125rem;">{{ in_progress_requests }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <p class="mb-0 d-flex align-items-center gap-2 w-25" style="font-size: 1.125rem;"><span
+                                    class="material-icons-outlined fs-4 text-success"
+                                    style="font-size: 1rem;">done</span>Bajarilgan</p>
                             <div class="">
                                 <p class="mb-0" style="font-size: 1.125rem;">{{ completed_requests }}</p>
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-between">
                             <p class="mb-0 d-flex align-items-center gap-2 w-25" style="font-size: 1.125rem;"><span
-                                    class="material-icons-outlined fs-6 text-danger" style="font-size: 1rem;">cancel</span>Rad etilgan</p>
+                                    class="material-icons-outlined fs-4 text-danger"
+                                    style="font-size: 1rem;">cancel</span>Rad etilgan</p>
                             <div class="">
                                 <p class="mb-0" style="font-size: 1.125rem;">{{ rejected_requests }}</p>
                             </div>
                         </div>
                     </div>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            // Pie Chart
+                            const ctxPie = document.getElementById('pieChart').getContext('2d');
+                            const createGradient = (ctx, startColor, endColor) => {
+                                const gradient = ctx.createLinearGradient(0, 0, 200, 200);
+                                gradient.addColorStop(0, startColor);
+                                gradient.addColorStop(1, endColor);
+                                return gradient;
+                            };
+                            new Chart(ctxPie, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Yangi', 'Jarayonda', 'Bajarildi', 'Rad etildi'],
+                                    datasets: [{
+                                        data: [{{ new_requests }}, {{ in_progress_requests }}, {{ completed_requests }}, {{ rejected_requests }}],
+                                        backgroundColor: [
+                                            createGradient(ctxPie, '#005bea', '#00c6fb'),
+                                            createGradient(ctxPie, '#f7971e', '#ffd200'),
+                                            createGradient(ctxPie, '#17ad37', '#98ec2d'),
+                                            createGradient(ctxPie, '#ee0979', '#ff6a00')
+                                        ],
+                                        borderColor: '#ffffff',
+                                        borderWidth: 2
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: null,
+                                    }
+                                }
+                            });
+
+                            // Line Chart
+                            const ctxLine = document.getElementById('lineChart').getContext('2d');
+                            if (ctxLine) {
+                                const monthlyData = {{ monthly_data|safe }}; // Pass as JSON
+                                const months = monthlyData.map(item => item.month);
+                                const counts = monthlyData.map(item => item.count);
+
+                                // Calculate the maximum count and add a 10% buffer
+                                const maxCount = Math.max(...counts); // Find the highest count
+                                const yAxisMax = maxCount > 0 ? Math.ceil(maxCount * 1.1 / 10) * 10 : 60; // Add 10% buffer and round up to nearest 10
+
+                                new Chart(ctxLine, {
+                                    type: 'line',
+                                    data: {
+                                        labels: months,
+                                        datasets: [{
+                                            label: 'Oylik So\'rovlar',
+                                            data: counts,
+                                            borderColor: '#00d4ff',
+                                            backgroundColor: 'rgba(0, 212, 255, 0.2)',
+                                            borderWidth: 2,
+                                            fill: true,
+                                            tension: 0.4,
+                                            pointBackgroundColor: '#00d4ff',
+                                            pointRadius: 5
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                max: yAxisMax, // Use the dynamic max
+                                                title: { display: true, text: 'So\'rovlar soni' },
+                                                ticks: {
+                                                    stepSize: Math.ceil(yAxisMax / 10) // Adjust tick steps dynamically
+                                                }
+                                            },
+                                            x: { title: { display: true, text: 'Oylar' } }
+                                        },
+                                        plugins: { legend: { display: false, position: 'top' } }
+                                    }
+                                });
+                            } else {
+                                console.error('Line chart canvas not found!');
+                            }
+                        });
+                    </script>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-  fetch("/stats/status-json/")
-    .then(response => response.json())
-    .then(data => {
-      var options = {
-        chart: {
-          height: 350,
-          type: 'radialBar'
-        },
-        plotOptions: {
-          radialBar: {
-            dataLabels: {
-              name: {
-                fontSize: '22px',
-              },
-              value: {
-                fontSize: '16px',
-              },
-              total: {
-                show: true,
-                label: 'Bajarilgan',
-                formatter: function () {
-                  return data.percent + "%";
-                }
-              }
-            }
-          }
-        },
-        labels: data.labels,
-        series: data.counts
-      };
+    fetch("/stats/status-json/")
+        .then(response => response.json())
+        .then(data => {
+            var options = {
+                chart: {
+                    height: 350,
+                    type: 'radialBar'
+                },
+                plotOptions: {
+                    radialBar: {
+                        dataLabels: {
+                            name: {
+                                fontSize: '22px',
+                            },
+                            value: {
+                                fontSize: '16px',
+                            },
+                            total: {
+                                show: true,
+                                label: 'Bajarilgan',
+                                formatter: function () {
+                                    return data.percent + "%";
+                                }
+                            }
+                        }
+                    }
+                },
+                labels: data.labels,
+                series: data.counts
+            };
 
-      var chart = new ApexCharts(document.querySelector("#status-radial"), options);
-      chart.render();
-    });
+            var chart = new ApexCharts(document.querySelector("#status-radial"), options);
+            chart.render();
+        });
 </script>
 {% endblock %}
